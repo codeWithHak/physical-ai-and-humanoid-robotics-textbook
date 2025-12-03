@@ -1,55 +1,61 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: 1.1.0 -> 2.0.0
+- List of modified principles:
+  - Renamed/Redefined: AI-Native Education -> The Triad Architecture
+  - Renamed/Redefined: Embodied Intelligence -> Software-to-Hardware Causality
+  - Renamed/Redefined: Curriculum Fidelity -> Tech Stack Isolation
+  - Renamed/Redefined: Hardware Reality -> Compute-Aware Deployment
+- Modified sections:
+  - Core Principles (completely redefined as Engineering Directives)
+- Templates requiring updates:
+  - .specify/templates/plan-template.md: ✅ (Generic references ok)
+  - .specify/templates/spec-template.md: ✅ (Generic references ok)
+  - .specify/templates/tasks-template.md: ✅ (Generic references ok)
+- Follow-up TODOs: None
+-->
+# Physical AI & Humanoid Robotics Textbook Constitution
 
-## Core Principles
+## Core Principles (Engineering Directives)
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### The Triad Architecture
+Content must structure every solution as: Human Intent (Voice/Prompt) -> AI Planner (LLM/VLA) -> Robotic Execution (ROS 2/Actuators).
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Software-to-Hardware Causality
+All code examples must explicitly explain the physical outcome on the robot hardware (e.g., "This node triggers the gripper").
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Tech Stack Isolation
+Strictly limit tooling to the defined stack: ROS 2 (Humble/Iron), Gazebo/Unity (Simulation), and NVIDIA Isaac (Perception).
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Compute-Aware Deployment
+Explicitly segregate code into "Workstation Logic" (High VRAM/Sim) and "Edge Logic" (Low RAM/Jetson deployment).
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+## Global Constraints & Tech Stack
 
-### [PRINCIPLE_6_NAME]
+- **Framework**: Docusaurus (deployed to GitHub Pages).
+- **Chatbot Backend**: FastAPI with OpenAI Agents/ChatKit SDKs.
+- **Database**: Neon (Serverless Postgres) and Qdrant Cloud (Vector DB).
+- **Auth**: Better-Auth.
+- **Scope**: Content generation is limited to THREE (3) complete chapters. However, the TECHNICAL PLATFORM must be fully functional.
 
+## Workflow & Quality Standards
 
-[PRINCIPLE__DESCRIPTION]
+- **Documentation Strategy**: DO NOT rely on internal training data for libraries (Better-Auth, OpenAI SDKs, Docusaurus). ALWAYS use the "Context 7" MCP Server to fetch up-to-date documentation.
+- **Citation Style**: IEEE format for all technical claims and references.
+- **Documentation Quality**: Markdown files must use Docusaurus-specific features (admonitions, tabs).
+- **Code Style**: Python must be type-hinted and follow PEP8.
+- **Tone**: Technical, empowering (aimed at future founders), and academic.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Success Criteria
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- **Content**: 3 complete, high-quality chapters deployed on Docusaurus.
+- **RAG Agent**: A chatbot that answers questions about the book AND specifically allows users to highlight text and ask questions about the selection.
+- **Auth Flow**: Sign-up/Sign-in implemented via Better-Auth, including a mandatory survey on the user's software/hardware background.
+- **Personalization**: A functional button at the start of each chapter that adapts content based on the logged-in user's background.
+- **Localization**: A functional button at the start of each chapter that translates the content into Urdu.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution supersedes all other practices. Amendments require documentation, approval, and a clear migration plan. All PRs and reviews must verify compliance with these principles.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 2.0.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-04
