@@ -32,7 +32,7 @@ Explicitly segregate code into "Workstation Logic" (High VRAM/Sim) and "Edge Log
 
 ## Global Constraints & Tech Stack
 
-- **Framework**: Docusaurus (deployed to GitHub Pages).
+- **Framework**: Docusaurus (deployed to Vercel).
 - **Chatbot Backend**: FastAPI with OpenAI Agents/ChatKit SDKs.
 - **Database**: Neon (Serverless Postgres) and Qdrant Cloud (Vector DB).
 - **Auth**: Better-Auth.

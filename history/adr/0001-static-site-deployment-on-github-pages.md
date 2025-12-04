@@ -2,7 +2,7 @@
 
 > **Scope**: Deployment Strategy and Infrastructure
 
-- **Status:** Accepted
+- **Status:** Superseded (by ADR-0004)
 - **Date:** 2025-12-04
 - **Feature:** 001-platform-foundation-setup
 - **Context:** We are initializing the "Physical AI & Humanoid Robotics Textbook" platform. We need a hosting solution that is cost-effective (ideally free), reliable, supports static site generation, and integrates tightly with our source control on GitHub. The site needs to be publicly accessible.
