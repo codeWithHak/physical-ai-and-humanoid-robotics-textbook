@@ -217,6 +217,8 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 - React 18+ / TypeScript 5.x + Docusaurus v3+ (`@docusaurus/BrowserOnly`) (004-robotbody-animation-component)
 - N/A (Visual Component) (004-robotbody-animation-component)
 - N/A (Frontend only) (005-revert-hero-image)
+- React 18+ / TypeScript 5.x / MDX + Docusaurus v3+, Mermaid (Native support) (006-chapter-1-content-and-micro-interactions)
+- N/A (Static Content + Client-side State) (006-chapter-1-content-and-micro-interactions)
 
 ## Recent Changes
 - 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)
