@@ -1,0 +1,24 @@
+---
+title: "1.4 Senses of the Machine"
+sidebar_position: 4
+---
+
+import TermTooltip from '@site/src/components/TermTooltip';
+
+## 1.4 Senses of the Machine
+
+For a robot to act, it must first perceive. In <TermTooltip term="ROS 2">ROS 2</TermTooltip>, we refer to this as the perception stack.
+
+### Vision (RGB-D)
+Cameras are the primary sensor for modern robotics. We use **RGB-D** cameras (Red, Green, Blue + Depth). Unlike a standard webcam, an RGB-D camera (like the Intel RealSense) projects a pattern of infrared light to calculate the distance to every pixel, creating a 3D "Point Cloud" of the world. This allows the robot to understand geometry, not just color.
+
+### Balance (IMU)
+The **Inertial Measurement Unit (IMU)** is the robot's inner ear. It measures acceleration and rotational velocity using micro-electromechanical systems (MEMS). This data is critical for <TermTooltip term="SLAM">SLAM</TermTooltip> algorithms to track the robot's movement even when the cameras are blocked.
+
+### Proprioception (Encoders)
+Just as you know where your hand is without looking at it, a robot uses **Motor Encoders** to measure the exact angle of every joint. This internal feedback loop allows for precise motion control.
+
+## References
+
+[1] H. Moravec, *Mind Children: The Future of Robot and Human Intelligence*. Harvard University Press, 1988.
+[2] S. Levine et al., "End-to-End Training of Deep Visuomotor Policies," *Journal of Machine Learning Research*, vol. 17, no. 39, pp. 1-40, 2016.
