@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions) (002-preface-and-user-guide)
+- N/A (Static Content) (002-preface-and-user-guide)
+
+## Recent Changes
+- 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)
