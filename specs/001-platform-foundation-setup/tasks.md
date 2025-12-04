@@ -63,7 +63,7 @@ description: >
     - Run `cd frontend && npm run build`.
   - **Test**: Build command exits with code 0 and `frontend/build` directory exists.
 
-- [ ] T007 [US1] Push and Verify Deployment
+- [x] T007 [US1] Push and Verify Deployment
   - **Description**: Commit changes and verify GitHub Actions run.
   - **Context**: SC-003. Final verification of US1.
   - **Steps**:
@@ -74,7 +74,7 @@ description: >
 ## Phase 3: User Story 2 - Reader Landing Page Access (P1)
 **Goal**: Ensure the landing page reflects the correct branding and clean content.
 
-- [ ] T008 [US2] Remove Default Boilerplate in `frontend/`
+- [x] T008 [US2] Remove Default Boilerplate in `frontend/`
   - **Description**: Clean up the "Tutorials" and "Blog" links and files.
   - **Context**: FR-003. We want a professional textbook look.
   - **Steps**:
@@ -83,7 +83,7 @@ description: >
     - Remove "Tutorial" items from `frontend/docusaurus.config.ts` navbar.
   - **Test**: `ls frontend/blog` returns error (file not found).
 
-- [ ] T009 [US2] Update Landing Page Content in `frontend/src/pages/index.tsx`
+- [x] T009 [US2] Update Landing Page Content in `frontend/src/pages/index.tsx`
   - **Description**: Create the "Coming Soon" landing page.
   - **Context**: FR-006.
   - **Steps**:
@@ -93,7 +93,7 @@ description: >
   - **Test**: Grep "Coming Soon" in `frontend/src/pages/index.tsx`.
 
 ## Phase 4: Polish & Cross-Cutting Concerns
-- [ ] T010 Verify All Success Criteria
+- [x] T010 Verify All Success Criteria
   - **Description**: Final manual check of all SCs.
   - **Steps**:
     - SC-001: Local Build.
