@@ -1,0 +1,29 @@
+/* Footer Override */
+.footer {
+  background-color: #000000;
+  border-top: 1px solid rgba(191, 230, 0, 0.1);
+}
+
+.footer__title {
+  color: var(--ifm-color-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.footer__link-item {
+  color: #ffffff;
+  opacity: 0.8;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.footer__copyright {
+  color: #666;
+  font-size: 0.875rem;
+}

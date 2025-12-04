@@ -212,6 +212,11 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 ## Active Technologies
 - Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions) (002-preface-and-user-guide)
 - N/A (Static Content) (002-preface-and-user-guide)
+- TypeScript 5.x / React 18+ + Docusaurus v3+ (Infima styling system), Custom CSS (003-visual-identity-overhaul)
+- N/A (Frontend Styles) (003-visual-identity-overhaul)
+- React 18+ / TypeScript 5.x + Docusaurus v3+ (`@docusaurus/BrowserOnly`) (004-robotbody-animation-component)
+- N/A (Visual Component) (004-robotbody-animation-component)
+- N/A (Frontend only) (005-revert-hero-image)
 
 ## Recent Changes
 - 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)
