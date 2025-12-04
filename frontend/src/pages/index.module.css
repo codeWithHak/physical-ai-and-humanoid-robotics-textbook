@@ -1,23 +1,121 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
+  padding: 4rem 0 6rem 0; /* Reduced top padding */
   position: relative;
   overflow: hidden;
+  /* Dark mode background handled by global theme */
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+.heroContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.heroText {
+  text-align: left;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-size: 4.5rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.heroSubtitle {
+  font-size: 1.5rem;
+  color: #a0a0a0; /* Muted text */
+  margin-bottom: 3rem;
+  font-weight: 400;
 }
 
 .buttons {
   display: flex;
-  align-items: center;
+  gap: 1.5rem;
+  justify-content: flex-start;
+}
+
+/* Button Overrides */
+.primaryBtn {
+  background-color: var(--ifm-color-primary);
+  color: black !important; /* Contrast */
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  background-color: var(--ifm-color-primary-light);
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  border: 2px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary) !important;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.secondaryBtn:hover {
+  background-color: rgba(191, 230, 0, 0.1);
+}
+
+.heroVisual {
+  position: relative;
+  display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+/* Glow Effect */
+.glowContainer {
+  position: relative;
+  border-radius: 16px;
+  border: 1px solid var(--ifm-color-primary);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 40px rgba(191, 230, 0, 0.2); /* Lime Glow */
+  backdrop-filter: blur(5px);
+}
+
+.diagramImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 996px) {
+  .heroContainer {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3rem;
+  }
+
+  .heroText {
+    order: 1; /* Text on top */
+    text-align: center;
+  }
+
+  .heroVisual {
+    order: 2; /* Visual below */
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+
+  .heroTitle {
+    font-size: 3rem;
+  }
 }

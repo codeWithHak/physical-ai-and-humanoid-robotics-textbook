@@ -35,6 +35,10 @@ const config: Config = {
     locales: ['en'],
   },
 
+  clientModules: [
+    require.resolve('./src/clientModule.js'),
+  ],
+
   presets: [
     [
       'classic',
@@ -61,7 +65,9 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     colorMode: {
-      respectPrefersColorScheme: true,
+      defaultMode: 'dark',
+      disableSwitch: false,
+      respectPrefersColorScheme: false,
     },
     navbar: {
       title: 'Physical AI & Robotics',

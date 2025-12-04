@@ -4,27 +4,55 @@
  * work well for content-centric websites.
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import './footer.css';
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Typography Engine */
+  --ifm-font-family-base: 'Space Grotesk', sans-serif;
+  --ifm-heading-font-family: 'Space Grotesk', sans-serif;
+  --ifm-heading-font-weight: 700; /* Default bold */
+}
+
+h1 {
+  font-weight: 900; /* Black */
+}
+
+h2 {
+  font-weight: 700; /* Bold */
+  font-size: 2rem;  /* Scaling Rule: 50% of typical H1 size or explicit override */
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Primary: Lime Green #BFE600 */
+  --ifm-color-primary: #BFE600;
+  --ifm-color-primary-dark: #ACCF00;
+  --ifm-color-primary-darker: #A3C200;
+  --ifm-color-primary-darkest: #86A100;
+  --ifm-color-primary-light: #D2FD00;
+  --ifm-color-primary-lighter: #DBFF33;
+  --ifm-color-primary-lightest: #E4FF66;
+
+  /* Background: Pure Black */
+  --ifm-background-color: #000000;
+  --ifm-background-surface-color: #0a0a0a; /* Slight contrast for cards */
+  
+  /* Text: White */
+  --ifm-font-color-base: #FFFFFF;
+  
+  --docusaurus-highlighted-code-line-bg: rgba(191, 230, 0, 0.1); /* Lime tint */
+}
+
+/* Navbar Styling (Transparent/Black + Lime Hover) */
+.navbar {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(191, 230, 0, 0.1);
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--ifm-color-primary);
 }
