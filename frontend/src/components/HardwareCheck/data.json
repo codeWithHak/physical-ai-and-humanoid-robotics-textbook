@@ -1,0 +1,12 @@
+[
+  { "name": "NVIDIA RTX 4090", "vram": 24, "cuda": true },
+  { "name": "NVIDIA RTX 4080", "vram": 16, "cuda": true },
+  { "name": "NVIDIA RTX 4070 Ti", "vram": 12, "cuda": true },
+  { "name": "NVIDIA RTX 3090", "vram": 24, "cuda": true },
+  { "name": "NVIDIA RTX 3080", "vram": 10, "cuda": true },
+  { "name": "NVIDIA RTX 3060", "vram": 12, "cuda": true },
+  { "name": "Apple M1/M2/M3 (Mac)", "vram": 16, "cuda": false },
+  { "name": "AMD Radeon (Other)", "vram": 8, "cuda": false },
+  { "name": "Intel Arc (Other)", "vram": 8, "cuda": false },
+  { "name": "Other / Integrated Graphics", "vram": 4, "cuda": false }
+]
