@@ -1,0 +1,52 @@
+---
+title: "3.2 Defining the Body (URDF & SDF)"
+sidebar_position: 2
+---
+
+import UrdfExplorer from '@site/src/components/UrdfExplorer';
+
+# 3.2 Defining the Body: URDF & SDF
+
+To simulate a robot, we must first define its body. We need to tell the simulator about the robot's physical properties: its shape, size, mass, and how its parts are connected. Just as an architect needs blueprints before building a house, a roboticist needs a description file before simulating a robot. We do this using XML-based description formats.
+
+## URDF: The Universal Robot Description Format
+
+**URDF** is the standard format in ROS 2 for defining a robot's structure. It describes the robot as a tree of **links** (rigid bodies) connected by **joints** (movable connections). Think of links as the bones and joints as the muscles/hinges.
+
+### The Building Blocks
+
+-   **`<link>`**: Represents a single physical part of the robot, like a chassis, an upper arm, or a wheel. A link has three main sub-elements:
+    -   **`<visual>`**: Defines what the link looks like to the human eye. This can be a simple primitive (box, cylinder, sphere) or a complex 3D mesh file (STL, DAE). This is purely for rendering and has no effect on physics.
+    -   **`<collision>`**: Defines the simplified geometry used by the physics engine to calculate contacts and collisions. Usually, this is a simpler shape than the visual mesh to save computation power. For example, a complex hand visual mesh might have a simple box as its collision geometry.
+    -   **`<inertial>`**: Defines the mass and the moment of inertia (how hard it is to rotate) of the link. Accurate inertial values are crucial for stable simulation.
+
+-   **`<joint>`**: Defines how two links move relative to each other. It connects a "parent" link to a "child" link.
+    -   **Type**:
+        -   `revolute`: A hinge joint that rotates around an axis (like your elbow). It has upper and lower limits.
+        -   `continuous`: A hinge joint that can rotate indefinitely (like a wheel).
+        -   `prismatic`: A sliding joint that moves along an axis (like a drawer).
+        -   `fixed`: A rigid connection where the two links effectively become one (like bolting a sensor to a chassis).
+    -   **Limits**: Defines the physical constraints of the joint, including range of motion (in radians or meters), maximum velocity, and maximum effort (torque or force).
+
+### Interactive Explorer
+
+Use the explorer below to visualize the relationship between the XML code and the physical structure of a simple robot arm. Hover over the code tags to see the corresponding parts on the diagram.
+
+<UrdfExplorer />
+
+## SDF: The Simulation Description Format
+
+While URDF is the standard for ROS 2 tools (like the Rviz visualizer and the `robot_state_publisher`), it has limitations. It describes a single robot in isolation. It lacks the ability to describe an entire environment—lights, terrain, other objects, and multiple robots interacting.
+
+This is where **SDF (Simulation Description Format)** comes in. SDF is the native format for the Gazebo simulator. It is more expressive than URDF. It can describe:
+-   **World properties**: Gravity, magnetic fields, lighting conditions.
+-   **Static objects**: Trees, buildings, furniture.
+-   **Physics engine parameters**: Solver types, time step sizes.
+-   **Sensor noise models**: Adding Gaussian noise to camera or laser data.
+
+In a typical ROS 2 workflow, you usually define your robot using **URDF** (or its more powerful cousin, **Xacro**, which adds macros and variables to URDF). When you launch a simulation, Gazebo takes your URDF and automatically converts it into SDF behind the scenes to simulate it within a larger world context. This allows you to keep a single "source of truth" for your robot model that works for both visualization (Rviz) and simulation (Gazebo).
+
+## References
+[1] "URDF - ROS Wiki," ROS.org. [Online]. Available: http://wiki.ros.org/urdf.
+[2] "SDF Specification," SDFormat.org. [Online]. Available: http://sdformat.org/spec.
+[3] "Xacro - ROS Wiki," ROS.org. [Online]. Available: http://wiki.ros.org/xacro.
