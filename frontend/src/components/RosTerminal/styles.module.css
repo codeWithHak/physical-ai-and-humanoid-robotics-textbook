@@ -1,0 +1,64 @@
+.rosTerminal {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-family: monospace;
+  background-color: #f5f5f5;
+}
+
+.history {
+  margin-bottom: 1rem;
+}
+
+.input, .output {
+  white-space: pre-wrap;
+}
+
+.input {
+  color: #333;
+}
+
+.output {
+  color: #555;
+}
+
+.prompt {
+  margin-right: 0.5rem;
+  color: #999;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  border: none;
+  background-color: transparent;
+  flex-grow: 1;
+  font-family: monospace;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.autoTypeContainer {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.autoTypeButton {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-family: monospace;
+}
+
+.autoTypeButton:hover {
+    background-color: #d0d0d0;
+}

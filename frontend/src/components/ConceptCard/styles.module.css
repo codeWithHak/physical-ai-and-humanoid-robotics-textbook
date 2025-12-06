@@ -1,0 +1,27 @@
+.conceptCard {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.toggleContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.toggleButton {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.toggleButton.active {
+  background-color: #e0e0e0;
+}
+
+.content {
+  /* No specific styles needed for the content wrapper */
+}

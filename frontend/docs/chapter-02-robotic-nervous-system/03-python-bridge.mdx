@@ -1,0 +1,86 @@
+---
+title: "2.3 The Python Bridge (rclpy)"
+sidebar_position: 3
+---
+
+# 2.3 The Python Bridge (`rclpy`)
+
+While ROS 2 is built on C++, its primary interface for AI and machine learning engineers is Python. The **ROS Client Library for Python**, or `rclpy`, is the bridge that allows us to write ROS 2 nodes in Python [1]. As an AI engineer, `rclpy` is your gateway to the robot's nervous system. It's how you'll take the output of your models—predictions, plans, decisions—and inject them into the ROS 2 graph to be acted upon by the robot.
+
+`rclpy` provides a Pythonic API for interacting with the ROS 2 Graph. It handles the underlying complexity of the ROS 2 middleware (DDS), allowing you to focus on the logic of your node. With `rclpy`, you can:
+
+-   Create nodes.
+-   Publish and subscribe to topics.
+-   Create and call services.
+-   Create and use actions.
+-   Manage parameters.
+
+This focus on a high-level Python interface is a key reason why ROS 2 has become the standard for robotics research. It allows AI experts to work in the language they are most comfortable with, without needing to become experts in low-level C++ or network programming [2].
+
+## A Minimal Publisher Node
+
+Let's look at a simple example of a Python node that uses `rclpy` to publish a string message. This node could, for example, take the output of a Large Language Model and publish it for another node to act upon.
+
+```python title="llm_publisher_node.py"
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class LLMPublisher(Node):
+    def __init__(self):
+        super().__init__('llm_publisher')
+        self.publisher_ = self.create_publisher(String, 'llm_output', 10)
+        timer_period = 2.0  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.i = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'LLM says: Hello World {self.i}'
+        self.publisher_.publish(msg)
+        self.get_logger().info(f'Publishing: "{msg.data}"')
+        self.i += 1
+
+def main(args=None):
+    rclpy.init(args=args)
+    llm_publisher = LLMPublisher()
+    rclpy.spin(llm_publisher)
+    llm_publisher.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+### Deconstructing the Node
+
+Let's break down this example:
+
+1.  **Imports**: We import `rclpy`, the `Node` class, and the `String` message type from `std_msgs.msg`. `std_msgs` is a package containing standard message types for common data like strings, integers, and booleans.
+
+2.  **`LLMPublisher` Class**: Our node is defined as a class that inherits from `Node`.
+
+3.  **`__init__`**: In the constructor, we first call the parent class's constructor and give our node a name (`'llm_publisher'`). This is the name that will appear in the ROS 2 Graph.
+
+4.  **`create_publisher`**: This is the core of the publisher. We call `self.create_publisher()` with three arguments:
+    -   The message type (`String`).
+    -   The topic name (`'llm_output'`).
+    -   The "queue size" (10). This is a quality of service (QoS) setting that limits the amount of queued messages if a subscriber is not receiving them fast enough [3].
+
+5.  **`create_timer`**: We create a timer that will call our `timer_callback` function every `timer_period` seconds (in this case, every 2 seconds). This is a common way to create a node that publishes data at a regular interval.
+
+6.  **`timer_callback`**: This function is called by the timer. It creates a `String` message, sets its `data` attribute, and then calls `self.publisher_.publish(msg)` to send the message on the `'llm_output'` topic. It also logs the message to the console using `self.get_logger().info()`.
+
+7.  **`main` function**: This is the entry point for the node.
+    -   `rclpy.init()`: Initializes the `rclpy` library.
+    -   `llm_publisher = LLMPublisher()`: Creates an instance of our node.
+    -   `rclpy.spin(llm_publisher)`: This is the main event loop for the node. It keeps the node running, processing callbacks (like our timer callback), until the node is shut down.
+    -   `llm_publisher.destroy_node()`: Cleans up the node.
+    -   `rclpy.shutdown()`: Shuts down the `rclpy` library.
+
+This simple example demonstrates the fundamental pattern for creating a ROS 2 publisher in Python. In the next chapter, we will see how to create a subscriber node to receive these messages and act upon them.
+
+## References
+[1] "rclpy documentation," ROS 2 Documentation. [Online]. Available: https://docs.ros.org/en/humble/p/rclpy/.
+[2] "Why Python for Robotics?," Robotics Stack Exchange. [Online]. Available: https://robotics.stackexchange.com/questions/124/why-python-for-robotics.
+[3] "Understanding Quality of Service," ROS 2 Documentation. [Online]. Available: https://docs.ros.org/en/humble/Concepts/About-Quality-of-Service.html.
