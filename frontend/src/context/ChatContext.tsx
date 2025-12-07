@@ -15,9 +15,8 @@ interface ChatContextProps {
 
 const ChatContext = createContext<ChatContextProps | undefined>(undefined);
 
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://physicalaibookbackend.vercel.app/api/chat'
-  : 'http://127.0.0.1:8000/api/chat';
+// Always use the deployed backend
+const API_URL = 'http://127.0.0.1:8000/api/chat';
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,13 +71,60 @@ export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const triggerAskAI = useCallback((text: string) => {
+    console.log('[ChatContext] triggerAskAI called with text:', text);
     setIsOpen(true);
-    setInputQuery(text); // Set for display purposes
-    // Automatically send the message
-    sendMessage(text);
-    // Clear inputQuery after a short delay to prevent re-sends
-    setTimeout(() => setInputQuery(''), 100);
-  }, [sendMessage]);
+    console.log('[ChatContext] Chat opened');
+    
+    // Create a hidden prompt that wraps the selected text
+    const hiddenPrompt = `Can you explain this: "${text}"`;
+    
+    // Show only the selected text to the user in the chat
+    const userMsg: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      content: text, // User sees only the selected text
+      timestamp: Date.now(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setIsLoading(true);
+    
+    // Send the hidden prompt to the API
+    console.log('[ChatContext] Sending message with hidden prompt...');
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: hiddenPrompt }), // Send the wrapped prompt
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        
+        const aiMsg: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'ai',
+          content: data.answer,
+          sources: data.sources,
+          timestamp: Date.now(),
+        };
+        
+        setMessages((prev) => [...prev, aiMsg]);
+      })
+      .catch((error) => {
+        console.error('Chat API error:', error);
+        const errorMsg: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'ai',
+          content: "I'm having trouble connecting to my brain right now. Please try again later.",
+          timestamp: Date.now(),
+        };
+        setMessages((prev) => [...prev, errorMsg]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   const clearMessages = useCallback(() => {
     setMessages([]);

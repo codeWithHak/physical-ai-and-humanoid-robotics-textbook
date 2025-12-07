@@ -44,7 +44,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   return (
     <div className={styles.chatWindow}>
       <div className={styles.header}>
-        <span className={styles.headerTitle}>RoboLearn AI</span>
+        <span className={styles.headerTitle}>Learn With AI</span>
         <button className={styles.closeButton} onClick={onClose} aria-label="Close">
           <X size={20} />
         </button>

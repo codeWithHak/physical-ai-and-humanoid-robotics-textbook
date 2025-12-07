@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { MessageCircle } from 'lucide-react';
 import { useChat } from '../../context/ChatContext';
 import styles from './styles.module.css';
 
@@ -69,14 +70,16 @@ export const SelectionTooltip: React.FC = () => {
   }, [handleSelectionChange, handleClickAway]);
 
   const handleAskAI = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent re-triggering selection change
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('[SelectionTooltip] Ask clicked with text:', selectedText);
     if (selectedText) {
+      console.log('[SelectionTooltip] Calling triggerAskAI...');
       triggerAskAI(selectedText);
       setVisible(false);
+      console.log('[SelectionTooltip] triggerAskAI called successfully');
     }
   };
-
-  if (!visible) return null;
 
   return (
     <div
@@ -84,8 +87,10 @@ export const SelectionTooltip: React.FC = () => {
       className={`${styles.selectionTooltip} ${visible ? styles.visible : ''}`}
       style={{ top: position.y, left: position.x }}
       onClick={handleAskAI}
+      onMouseDown={handleAskAI}
     >
-      Ask AI
+      <MessageCircle size={14} style={{ marginRight: '4px' }} />
+      Ask
     </div>
   );
 };
