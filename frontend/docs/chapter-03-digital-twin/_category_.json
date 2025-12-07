@@ -1,0 +1,8 @@
+{
+  "label": "Chapter 3: The Digital Twin",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Simulation-first development with URDF, SDF, and Physics Engines."
+  }
+}

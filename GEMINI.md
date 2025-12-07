@@ -221,6 +221,9 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 - N/A (Static Content + Client-side State) (006-chapter-1-content-and-micro-interactions)
 - MDX / Docusaurus v3+ + Docusaurus Sidebar Configuration (007-refactor-chapter-1-modular-structure)
 - N/A (File System) (007-refactor-chapter-1-modular-structure)
+- Python 3.11 + `qdrant-client`, `google-generativeai`, `python-dotenv` (011-rag-ingestion)
+- Qdrant Cloud (Vector DB) (011-rag-ingestion)
+- Python 3.12 + `fastapi`, `uvicorn`, `mangum`, `pydantic`, `python-dotenv` (012-backend-server-foundation)
 
 ## Recent Changes
 - 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)

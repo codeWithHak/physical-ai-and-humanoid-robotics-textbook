@@ -1,0 +1,20 @@
+# Node.js
+node_modules/
+build/
+.docusaurus/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+.env*
+
+# OS specific
+.DS_Store
+Thumbs.db

@@ -1,0 +1,10 @@
+qdrant-client
+google-generativeai
+python-dotenv
+markdown-it-py
+tenacity
+google-api-core
+fastapi
+uvicorn
+mangum
+pydantic
