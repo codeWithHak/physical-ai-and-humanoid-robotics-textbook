@@ -46,12 +46,14 @@ class RagService:
         self.collection_name = "physical_ai_textbook"
         self.embedding_model = "models/embedding-001"
         self.vector_size = 768
-        self.top_k = 5  # Number of relevant chunks to retrieve
+        self.top_k = 10  # Increased for better coverage
+        self.similarity_threshold = 0.65  # Minimum similarity score
         
         print(f"[RAG SERVICE] Initialized successfully")
         print(f"  - Collection: {self.collection_name}")
         print(f"  - Embedding model: {self.embedding_model}")
         print(f"  - Top-K retrieval: {self.top_k}")
+        print(f"  - Similarity threshold: {self.similarity_threshold}")
     
     async def process_query(self, request: RagRequest) -> RagResponse:
         """
@@ -126,18 +128,24 @@ class RagService:
                 collection_name=self.collection_name,
                 query=query_embedding,
                 limit=self.top_k,
-                with_payload=True
+                with_payload=True,
+                score_threshold=self.similarity_threshold  # Filter by similarity
             )
             
             results = []
             for point in response.points:
                 if point.payload:
+                    # Log similarity score for debugging
+                    score = point.score if hasattr(point, 'score') else 'N/A'
+                    print(f"[RAG SERVICE] Retrieved chunk with score: {score}")
+                    
                     results.append(SearchResult(
                         text=point.payload.get("content", ""),
                         source_id=point.payload.get("filepath", "Unknown"),
                         title=point.payload.get("heading", "Unknown Section")
                     ))
             
+            print(f"[RAG SERVICE] Filtered to {len(results)} chunks above threshold")
             return results
         except Exception as e:
             print(f"[RAG SERVICE] Error searching Qdrant: {e}")
@@ -161,31 +169,34 @@ class RagService:
         
         context = "\n".join(context_parts)
         
-        # Create the prompt
-        system_prompt = """You are a helpful AI assistant that answers questions about Physical AI and Humanoid Robotics based on a textbook.
+        # Create the prompt with better context
+        system_prompt = """You are an expert AI tutor for a Physical AI and Humanoid Robotics textbook. Your goal is to help students understand complex robotics concepts clearly and accurately.
 
-Your task is to:
-1. Answer the user's question using ONLY the information provided in the context below
-2. Be accurate and concise
-3. If the context doesn't contain enough information to answer the question, say "I cannot find that in the textbook."
-4. Cite which source(s) you used in your answer by mentioning the source numbers
+Guidelines:
+1. Use the textbook context below as your primary source of truth
+2. Provide clear, beginner-friendly explanations with examples when helpful
+3. If the context is limited but the question is reasonable, supplement with general robotics/AI knowledge
+4. Be conversational and encouraging - you're teaching, not just answering
+5. Keep responses concise: 2-3 sentences for definitions, 4-6 sentences for explanations
+6. Output ONLY plain text - NO markdown, NO asterisks, NO special formatting
+7. If you cannot answer confidently, say "I don't have enough information about that specific topic in the textbook."
 
-Context from the textbook:
+Textbook Context (from most to least relevant):
 """
         
         user_prompt = f"""{system_prompt}
 
 {context}
 
-User Question: {query}
+Student Question: {query}
 
-Answer:"""
+Your Response (plain text, educational tone):"""
         
         try:
             response = self.openai_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
-                    {"role": "system", "content": "You are a helpful AI assistant for a Physical AI and Humanoid Robotics textbook."},
+                    {"role": "system", "content": "You are a helpful AI assistant for a Physical AI and Humanoid Robotics textbook. Always respond in plain text without any markdown formatting."},
                     {"role": "user", "content": user_prompt}
                 ],
                 temperature=0.7,
