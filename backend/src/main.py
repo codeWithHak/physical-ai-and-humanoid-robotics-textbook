@@ -11,6 +11,7 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "https://physical-ai-and-humanoid-robotics-h.vercel.app",
+    "https://frontend-coq6lfeib-huzairs-projects-272a3e04.vercel.app",
 ]
 
 app.add_middleware(
