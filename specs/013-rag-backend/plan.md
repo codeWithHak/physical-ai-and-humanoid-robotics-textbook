@@ -14,7 +14,7 @@ Implement the Retrieval-Augmented Generation (RAG) pipeline within the FastAPI b
 - `fastapi` (Web Framework)
 - `google-generativeai` (Embeddings)
 - `qdrant-client` (Vector DB)
-- `openai-agents` (LLM Synthesis)
+- `openai` (LLM Synthesis)
 - `tenacity` (Retries)
 **Storage**: Qdrant Cloud (Vector Data), In-memory (Processing)
 **Testing**: `pytest`

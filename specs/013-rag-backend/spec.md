@@ -37,9 +37,8 @@ As a student reading the textbook, I want to ask natural language questions abou
 - **FR-002**: The system MUST use `qdrant_client` to search the `physical_ai_textbook` collection using the generated query embedding.
   - *Constraint*: Search must limit results to the top 5 chunks (`limit=5`).
   - *Constraint*: Search must extract `payload.source` and `payload.header` fields for citation purposes.
-- **FR-003**: The system MUST use the `openai-agents` library (specifically `Agent` and `Runner` classes) to synthesize the final answer.
+- **FR-003**: The system MUST use the `openai` library (specifically `AsyncOpenAI.chat.completions`) to synthesize the final answer.
   - *Constraint*: Must use the `gpt-4o-mini` model.
-  - *Constraint*: Must NOT use the experimental OpenAI Assistants API.
 - **FR-004**: The Agent MUST use the following System Prompt: *"You are an expert AI Robotics Professor. Answer based ONLY on the provided context. If the answer is not in the context, say 'I cannot find that in the textbook'. Always cite the section title."*
 
 #### API Endpoint (`backend/api/chat.py`)

@@ -13,13 +13,8 @@
 
 *Goal: Prepare the environment and install necessary dependencies.*
 
-- [x] T001 Install dependencies (`google-generativeai`, `qdrant-client`, `openai-agents`, `tenacity`, `python-dotenv`) in `backend/`
-- [x] T002 Verify `.env` configuration for API keys (`GEMINI_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`, `OPENAI_API_KEY`)
-- [x] T003 [US1] Create Pydantic models `RagRequest` and `RagResponse` in `backend/src/models/rag.py`
-- [x] T004 [US1] Create `RagService` class shell in `backend/src/services/rag_service.py`
-- [x] T005 [P] [US1] Implement `RagService.embed_query` using `google.generativeai`
-- [x] T006 [P] [US1] Implement `RagService.retrieve_context` using `qdrant-client` (limit=5, payload extraction)
-- [x] T007 [P] [US1] Implement `RagService.generate_answer` using `openai-agents` (Agent/Runner)
+- [x] T001 Install dependencies (`google-generativeai`, `qdrant-client`, `openai`, `tenacity`, `python-dotenv`) in `backend/`
+- [x] T007 [P] [US1] Implement `RagService.generate_answer` using `openai` (Chat Completions)
 - [x] T008 [US1] Implement `RagService.process_query` orchestration method (Embed -> Retrieve -> Generate) with `tenacity` retries
 
 ## Phase 3: User Story 1 - Student Query
