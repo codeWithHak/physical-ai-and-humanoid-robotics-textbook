@@ -1,0 +1,60 @@
+openapi: 3.0.3
+info:
+  title: Physical AI Textbook - RAG API
+  version: 1.0.0
+paths:
+  /api/chat:
+    post:
+      summary: Process a natural language query against the textbook.
+      operationId: chat
+      tags:
+        - Chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RagRequest'
+      responses:
+        '200':
+          description: Successful response with answer and citations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RagResponse'
+        '503':
+          description: Service Unavailable (Upstream dependency failure).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    RagRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          minLength: 1
+          example: "How do I install ROS?"
+    RagResponse:
+      type: object
+      required:
+        - answer
+        - sources
+      properties:
+        answer:
+          type: string
+          example: "To install ROS, you should follow the official guide..."
+        sources:
+          type: array
+          items:
+            type: string
+          example: ["Section 2.1: ROS Installation"]
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
