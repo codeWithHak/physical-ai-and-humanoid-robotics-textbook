@@ -1,35 +1,14 @@
-import logging
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import os
+import sys
 
-# Configure basic logging for local development (FR-009)
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Get the directory of this file (api)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# Get the parent directory (project root)
+parent_dir = os.path.dirname(current_dir)
+# Get the src directory
+src_dir = os.path.join(parent_dir, 'src')
+# Add src to sys.path
+sys.path.append(src_dir)
 
-app = FastAPI() # T005
-
-# T006: Implement CORS Middleware
-origins = [
-    "http://localhost:3000", # Development frontend
-    "https://physical-ai-and-humanoid-robotics-h.vercel.app", # Production frontend
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# T007: Implement GET / endpoint
-@app.get("/")
-async def read_root():
-    logger.info("GET / endpoint accessed")
-    return {"status": "Physical AI API Ready"}
-
-# T008: Implement GET /health endpoint
-@app.get("/health")
-async def health_check():
-    logger.info("GET /health endpoint accessed")
-    return {"status": "OK"}
+# Import the app
+from main import app
