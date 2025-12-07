@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
-from backend.src.models.rag import RagRequest, RagResponse
-from backend.src.services.rag_service import RagService
+from src.models.rag import RagRequest, RagResponse
+from src.services.rag_service import RagService
 from google.api_core.exceptions import GoogleAPIError
 from qdrant_client.http.exceptions import UnexpectedResponse
 

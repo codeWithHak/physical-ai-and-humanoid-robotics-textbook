@@ -2,11 +2,11 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 from qdrant_client import QdrantClient
-from openai_agents import Agent, Runner
+from agents import Agent, Runner
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 # Assuming SearchResult is defined in models.rag
-from backend.src.models.rag import RagRequest, RagResponse, SearchResult
+from src.models.rag import RagRequest, RagResponse, SearchResult
 
 class RagService:
     def __init__(self):
@@ -33,40 +33,69 @@ class RagService:
     async def embed_query(self, text: str) -> list[float]:
         """Generates an embedding for the given text using Google Generative AI."""
         # This is a placeholder; actual implementation depends on genai.embed_content specifics
-        model = "models/embedding-001" # As specified in the requirements
-        response = genai.embed_content(model=model, content=text)
-        return response['embedding']
+        try:
+            model = "models/embedding-001" # As specified in the requirements
+            print(f"DEBUG: Calling genai.embed_content with model={model}")
+            response = genai.embed_content(model=model, content=text)
+            print(f"DEBUG: genai response type: {type(response)}")
+            
+            if hasattr(response, 'embedding'):
+                return response.embedding
+            elif isinstance(response, dict):
+                return response['embedding']
+            else:
+                # Try subscript anyway as fallback
+                return response['embedding']
+        except Exception as e:
+            print(f"DEBUG: Error in embed_query: {e}")
+            raise e
 
     @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(3),
            retry=retry_if_exception_type((Exception)))
     async def retrieve_context(self, query_embedding: list[float], collection_name: str = "physical_ai_textbook") -> list[SearchResult]:
         """Retrieves relevant context from Qdrant using the query embedding."""
-        search_result = self.qdrant_client.search(
-            collection_name=collection_name,
-            query_vector=query_embedding,
-            limit=5
-        )
-        return [
-            SearchResult(
-                text=hit.payload["text"],
-                source_id=hit.payload["source"],
-                title=hit.payload["header"]
-            ) for hit in search_result
-        ]
+        try:
+            print(f"DEBUG: Calling qdrant search on {collection_name}")
+            search_result = self.qdrant_client.search(
+                collection_name=collection_name,
+                query_vector=query_embedding,
+                limit=5
+            )
+            print(f"DEBUG: qdrant found {len(search_result)} results")
+            return [
+                SearchResult(
+                    text=hit.payload.get("text", "") if hit.payload else "",
+                    source_id=hit.payload.get("source", "") if hit.payload else "",
+                    title=hit.payload.get("header", "") if hit.payload else ""
+                ) for hit in search_result
+            ]
+        except Exception as e:
+            print(f"DEBUG: Error in retrieve_context: {e}")
+            raise e
 
     async def generate_answer(self, context: str, user_query: str) -> str:
         """Generates an answer using the OpenAI Agent based on the provided context."""
         prompt = f"Context from textbook:\n{context}\n\nUser Question: {user_query}"
-        result = await Runner.run(self.agent, prompt)
+        # Check if run exists, else run_sync
+        print("DEBUG: Calling Agent Runner")
+        if hasattr(Runner, 'run'):
+            result = await Runner.run(self.agent, prompt)
+        elif hasattr(Runner, 'run_sync'):
+             # If sync, we should ideally run in threadpool, but for now just call it
+             result = Runner.run_sync(self.agent, prompt)
+        else:
+             raise AttributeError("Runner has neither run nor run_sync method")
         return result.final_output
 
     async def process_query(self, request: RagRequest) -> RagResponse:
         """Orchestrates the RAG pipeline."""
         try:
+            print(f"DEBUG: Processing query: {request.message}")
             query_embedding = await self.embed_query(request.message)
             context_chunks = await self.retrieve_context(query_embedding)
 
             if not context_chunks:
+                print("DEBUG: No context chunks found")
                 return RagResponse(answer="I cannot find that in the textbook.", sources=[])
 
             # Prepare context for the LLM
@@ -74,6 +103,7 @@ class RagService:
             sources = sorted(list(set([f"{c.title} ({c.source_id})" for c in context_chunks])))
 
             answer = await self.generate_answer(context_text, request.message)
+            print("DEBUG: Answer generated")
 
             return RagResponse(answer=answer, sources=sources)
         except Exception as e:
