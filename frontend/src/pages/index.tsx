@@ -4,7 +4,6 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
-import { RagChat } from '../components/RagChat';
 
 import styles from './index.module.css';
 
@@ -58,7 +57,6 @@ export default function Home(): ReactNode {
       <main>
         {/* Main content area - currently empty per "Clean Slate" requirement */}
       </main>
-      <RagChat />
     </Layout>
   );
 }
