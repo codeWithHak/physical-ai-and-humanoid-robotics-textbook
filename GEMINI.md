@@ -224,6 +224,7 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 - Python 3.11 + `qdrant-client`, `google-generativeai`, `python-dotenv` (011-rag-ingestion)
 - Qdrant Cloud (Vector DB) (011-rag-ingestion)
 - Python 3.12 + `fastapi`, `uvicorn`, `mangum`, `pydantic`, `python-dotenv` (012-backend-server-foundation)
+- Qdrant Cloud (Vector Data), In-memory (Processing) (013-rag-backend)
 
 ## Recent Changes
 - 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)
