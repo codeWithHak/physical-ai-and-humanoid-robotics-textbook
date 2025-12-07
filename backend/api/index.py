@@ -11,4 +11,4 @@ src_dir = os.path.join(parent_dir, 'src')
 sys.path.append(src_dir)
 
 # Import the app
-from main import app
+from src.main import app

@@ -30,8 +30,11 @@ This document summarizes technical decisions and clarifications made during the 
     -   Wildcard (`*`) origin: Rejected due to security implications in a production environment.
     -   No CORS: Rejected as it would prevent frontend-backend communication across origins.
 
-## Decision: Vercel Monorepo Configuration
+## Decision: Vercel Deployment Strategy
 
--   **What was chosen**: A root-level `vercel.json` will be used to define the Python build for the backend and manage routing for both the Python function (`/api/*`) and the Docusaurus frontend.
--   **Rationale**: This is the standard and recommended approach for deploying monorepos with mixed technologies (like Docusaurus and FastAPI) on Vercel, ensuring efficient routing and proper build processes.
--   **Alternatives considered**: None, as this is the standard Vercel pattern for this setup.
+-   **What was chosen**: The FastAPI backend will be deployed as an independent Vercel project targeting the `backend/` subdirectory of this repository. The `vercel.json` within the `backend/` subdirectory will configure its Python build and routing. The Docusaurus frontend will also be deployed as an independent Vercel project targeting the `frontend/` subdirectory, relying on Vercel's auto-detection or a `vercel.json` within `frontend/`. The root `vercel.json` will be removed.
+-   **Rationale**: This decision was made to resolve persistent `vercel.json` parsing and routing issues encountered with a root-level monorepo `vercel.json` and to align with the user's current deployment approach. This strategy simplifies configuration for both frontend and backend deployments and enables independent deployment cycles for each subdirectory, while keeping all code in a single Git repository. This aligns with the amended ADR-0005: Decouple Backend Deployment.
+-   **Alternatives considered**:
+    -   Continue troubleshooting Vercel root-level monorepo configuration: Rejected due to excessive time consumption and complexity.
+    -   Completely separate GitHub repositories: Rejected as the user's current deployment approach already involves Vercel projects targeting subdirectories, making a full repository separation unnecessary and adding overhead.
+    -   Original monorepo approach with root `vercel.json`: Superseded by this decision and failed to deploy effectively.

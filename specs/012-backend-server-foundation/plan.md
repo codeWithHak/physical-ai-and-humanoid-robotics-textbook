@@ -7,7 +7,7 @@
 
 ## Summary
 
-This feature establishes the foundational serverless FastAPI application within the `backend/` directory, specifically configured for deployment on Vercel. It involves updating dependencies, setting up the FastAPI instance with CORS middleware, implementing basic `/` and `/health` endpoints, and configuring `vercel.json` for a monorepo setup, enabling communication between the Docusaurus frontend and the Python backend.
+This feature establishes the foundational serverless FastAPI application, deployed as its own Vercel project targeting the `backend/` subdirectory of this repository. It involves updating dependencies, setting up the FastAPI instance with CORS middleware, implementing basic `/` and `/health` endpoints, and configuring `vercel.json` within the `backend/` subdirectory for its standalone deployment, enabling frontend communication with the publicly accessible backend API.
 
 ## Technical Context
 
@@ -15,10 +15,10 @@ This feature establishes the foundational serverless FastAPI application within 
 **Primary Dependencies**: `fastapi`, `uvicorn`, `mangum`, `pydantic`, `python-dotenv`
 **Storage**: N/A
 **Testing**: `pytest`
-**Target Platform**: Vercel (Serverless Functions) & Local (Linux/macOS)
-**Project Type**: Backend API (Serverless)
+**Target Platform**: Vercel (Serverless Functions - targeting `backend/` subdirectory) & Local (Linux/macOS)
+**Project Type**: Backend API (Serverless - targeting `backend/` subdirectory)
 **Performance Goals**: Cold start time MUST be under 2 seconds.
-**Constraints**: Monorepo setup with Docusaurus frontend; CORS from `http://localhost:3000` (dev) and `https://physical-ai-and-humanoid-robotics-h.vercel.app/` (prod) must be enabled.
+**Constraints**: Backend deployed as an independent Vercel project targeting `backend/` subdirectory. CORS from `http://localhost:3000` (dev) and `https://physical-ai-and-humanoid-robotics-h.vercel.app/` (prod) must be enabled.
 **Scale/Scope**: Initial API foundation with basic endpoints (`/`, `/health`) to verify deployment and routing.
 
 ## Constitution Check
@@ -53,16 +53,17 @@ specs/012-backend-server-foundation/
 .
 ├── backend/
 │   ├── api/
-│   │   └── index.py          # FastAPI application entry point
+│   │   └── index.py          # FastAPI application entry point (within backend/ subdirectory)
 │   ├── venv/
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── vercel.json           # Vercel configuration for the backend project
 ├── frontend/
 │   └── ...                   # Existing Docusaurus frontend
-├── vercel.json               # Vercel monorepo configuration
-└── .env
+│       └── vercel.json       # Vercel configuration for the frontend project (if needed, or rely on auto-detection)
+└── .env                      # Environment variables for API keys
 ```
 
-**Structure Decision**: The backend API will reside in `backend/api/index.py`, which is a common structure for Vercel Serverless Functions. A root-level `vercel.json` will be created/updated to manage the monorepo deployment.
+**Structure Decision**: The backend API will reside in `backend/api/index.py` within the `backend/` subdirectory. A `vercel.json` file will be created within the `backend/` subdirectory to configure its deployment as an independent Vercel project. The `frontend/` subdirectory will also be deployed as an independent Vercel project. The `vercel.json` at the root of the repository will be removed to avoid conflicts.
 
 ## Complexity Tracking
 

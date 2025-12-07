@@ -19,10 +19,10 @@ This document describes the key conceptual entities related to the server founda
     -   Allows requests from specific origins: `http://localhost:3000` (development) and `https://physical-ai-and-humanoid-robotics-h.vercel.app/` (production).
     -   Permits common HTTP methods (GET, POST, PUT, DELETE, etc.) and headers required for API interaction.
 
-### Vercel Configuration (`vercel.json`)
+### Vercel Configuration (Backend `vercel.json`)
 
--   **Description**: A configuration file located at the project root, used by Vercel to define the monorepo's build and routing behavior.
+-   **Description**: A configuration file within the `backend/` subdirectory (of this repository) that defines how the FastAPI application is built and deployed as an independent Vercel project targeting that subdirectory.
 -   **Key Characteristics**:
-    -   Defines the Python build for the `backend/` directory.
-    -   Routes requests matching `/api/*` to the FastAPI serverless function.
-    -   Routes all other requests (e.g., `/`, `/docs`) to the Docusaurus frontend build.
+    -   Defines the Python build for the FastAPI application.
+    -   Routes requests to the FastAPI serverless function.
+
