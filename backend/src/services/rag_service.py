@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 from qdrant_client import QdrantClient
-from agents import Agent, Runner
+from openai import AsyncOpenAI
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 # Assuming SearchResult is defined in models.rag
@@ -21,12 +21,9 @@ class RagService:
 
         genai.configure(api_key=self.gemini_api_key)
         self.qdrant_client = QdrantClient(url=self.qdrant_url, api_key=self.qdrant_api_key)
+        self.openai_client = AsyncOpenAI(api_key=self.openai_api_key)
 
-        # Initialize OpenAI Agent
-        self.agent = Agent(
-            name="AI Robotics Professor",
-            instructions="You are an expert AI Robotics Professor. Answer based ONLY on the provided context. If the answer is not in the context, say 'I cannot find that in the textbook'. Always cite the section title."
-        )
+        self.system_prompt = "You are an expert AI Robotics Professor. Answer based ONLY on the provided context. If the answer is not in the context, say 'I cannot find that in the textbook'. Always cite the section title."
 
     @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(3),
            retry=retry_if_exception_type((Exception))) # Catch all for now, refine later
@@ -74,18 +71,22 @@ class RagService:
             raise e
 
     async def generate_answer(self, context: str, user_query: str) -> str:
-        """Generates an answer using the OpenAI Agent based on the provided context."""
-        prompt = f"Context from textbook:\n{context}\n\nUser Question: {user_query}"
-        # Check if run exists, else run_sync
-        print("DEBUG: Calling Agent Runner")
-        if hasattr(Runner, 'run'):
-            result = await Runner.run(self.agent, prompt)
-        elif hasattr(Runner, 'run_sync'):
-             # If sync, we should ideally run in threadpool, but for now just call it
-             result = Runner.run_sync(self.agent, prompt)
-        else:
-             raise AttributeError("Runner has neither run nor run_sync method")
-        return result.final_output
+        """Generates an answer using the OpenAI Chat Completions API based on the provided context."""
+        try:
+            print("DEBUG: Calling OpenAI Chat Completions")
+            prompt = f"Context from textbook:\n{context}\n\nUser Question: {user_query}"
+            
+            response = await self.openai_client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            print(f"DEBUG: Error in generate_answer: {e}")
+            raise e
 
     async def process_query(self, request: RagRequest) -> RagResponse:
         """Orchestrates the RAG pipeline."""
