@@ -21,6 +21,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -33,7 +35,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
     e.preventDefault();
     if (input.trim() && !isLoading) {
       onSendMessage(input.trim());
-      setInput('');
+      setInput(''); // Clear input after sending
     }
   };
 

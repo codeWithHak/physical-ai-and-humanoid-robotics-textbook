@@ -1,195 +1,222 @@
+"""
+RAG Service for processing queries against the Physical AI textbook.
+Uses Gemini for embeddings, Qdrant for vector search, and OpenAI for answer generation.
+"""
+
 import os
-from dotenv import load_dotenv
+from typing import List
 import google.generativeai as genai
 from qdrant_client import QdrantClient
-from openai import AsyncOpenAI
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
-
+from openai import OpenAI
 from src.models.rag import RagRequest, RagResponse, SearchResult
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class RagService:
+    """Service for handling RAG (Retrieval-Augmented Generation) queries."""
+    
     def __init__(self):
-        load_dotenv()
+        """Initialize the RAG service with required clients and configuration."""
+        # Load environment variables
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
         self.qdrant_url = os.getenv("QDRANT_URL")
         self.qdrant_api_key = os.getenv("QDRANT_API_KEY")
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
-
+        
+        # Validate environment variables
         if not all([self.gemini_api_key, self.qdrant_url, self.qdrant_api_key, self.openai_api_key]):
-            raise ValueError("Missing one or more required environment variables for RagService.")
-
-        genai.configure(api_key=self.gemini_api_key)
-        self.qdrant_client = QdrantClient(url=self.qdrant_url, api_key=self.qdrant_api_key)
-        self.openai_client = AsyncOpenAI(api_key=self.openai_api_key)
-
-        self.system_prompt = "You are an expert AI Robotics Professor. Answer based ONLY on the provided context. If the answer is not in the context, say 'I cannot find that in the textbook'. Always cite the section title."
-
-    @retry(
-        wait=wait_exponential(multiplier=1, min=4, max=10), 
-        stop=stop_after_attempt(3),
-        retry=retry_if_exception_type(Exception)
-    )
-    async def embed_query(self, text: str) -> list[float]:
-        """Generates an embedding for the given text using Google Generative AI."""
-        try:
-            model = "models/embedding-001"
-            print(f"DEBUG: Calling genai.embed_content with model={model}, text length={len(text)}")
-            
-            # genai.embed_content is synchronous, so we call it directly
-            result = genai.embed_content(
-                model=model,
-                content=text,
-                task_type="retrieval_query"
+            raise ValueError(
+                "Missing required environment variables. Please ensure GEMINI_API_KEY, "
+                "QDRANT_URL, QDRANT_API_KEY, and OPENAI_API_KEY are set."
             )
+        
+        # Initialize clients
+        genai.configure(api_key=self.gemini_api_key)
+        
+        self.qdrant_client = QdrantClient(
+            url=self.qdrant_url,
+            api_key=self.qdrant_api_key
+        )
+        
+        self.openai_client = OpenAI(api_key=self.openai_api_key)
+        
+        # Configuration
+        self.collection_name = "physical_ai_textbook"
+        self.embedding_model = "models/embedding-001"
+        self.vector_size = 768
+        self.top_k = 5  # Number of relevant chunks to retrieve
+        
+        print(f"[RAG SERVICE] Initialized successfully")
+        print(f"  - Collection: {self.collection_name}")
+        print(f"  - Embedding model: {self.embedding_model}")
+        print(f"  - Top-K retrieval: {self.top_k}")
+    
+    async def process_query(self, request: RagRequest) -> RagResponse:
+        """
+        Process a user query using RAG pipeline.
+        
+        Args:
+            request: RagRequest containing the user's message
             
-            print(f"DEBUG: genai response received, type: {type(result)}")
+        Returns:
+            RagResponse with answer and sources
+        """
+        print(f"[RAG SERVICE] Processing query: {request.message[:100]}...")
+        
+        # Step 1: Generate embedding for the query
+        query_embedding = self._generate_query_embedding(request.message)
+        print(f"[RAG SERVICE] Generated query embedding (dim: {len(query_embedding)})")
+        
+        # Step 2: Search for relevant chunks in Qdrant
+        search_results = self._search_relevant_chunks(query_embedding)
+        print(f"[RAG SERVICE] Found {len(search_results)} relevant chunks")
+        
+        # Step 3: Generate answer using OpenAI with retrieved context
+        if not search_results:
+            print("[RAG SERVICE] No relevant chunks found, returning default response")
+            return RagResponse(
+                answer="I cannot find that in the textbook.",
+                sources=[]
+            )
+        
+        answer = self._generate_answer(request.message, search_results)
+        sources = self._extract_sources(search_results)
+        
+        print(f"[RAG SERVICE] Generated answer (length: {len(answer)} chars)")
+        print(f"[RAG SERVICE] Extracted {len(sources)} sources")
+        
+        return RagResponse(answer=answer, sources=sources)
+    
+    def _generate_query_embedding(self, query: str) -> List[float]:
+        """
+        Generate embedding for a user query using Gemini.
+        
+        Args:
+            query: User's question
             
-            # Google's embed_content returns a dict-like object
-            # Access the embedding using dictionary notation
-            embedding = result['embedding']
-            
-            print(f"DEBUG: Successfully extracted embedding, length={len(embedding)}")
-            return embedding
-            
-        except KeyError as e:
-            print(f"ERROR: KeyError in embed_query - response structure: {result}")
-            print(f"ERROR: Available keys: {dir(result) if hasattr(result, '__dir__') else 'N/A'}")
-            raise AttributeError(f"Could not find 'embedding' in response. Error: {e}")
-        except Exception as e:
-            print(f"ERROR in embed_query: {type(e).__name__}: {str(e)}")
-            raise
-
-    @retry(
-        wait=wait_exponential(multiplier=1, min=4, max=10), 
-        stop=stop_after_attempt(3),
-        retry=retry_if_exception_type(Exception)
-    )
-    async def retrieve_context(self, query_embedding: list[float], collection_name: str = "physical_ai_textbook") -> list[SearchResult]:
-        """Retrieves relevant context from Qdrant using the query embedding."""
+        Returns:
+            List of floats representing the embedding vector
+        """
         try:
-            print(f"DEBUG: Calling qdrant search on collection '{collection_name}'")
-            print(f"DEBUG: Query embedding length: {len(query_embedding)}")
+            response = genai.embed_content(
+                model=self.embedding_model,
+                content=query,
+                task_type="retrieval_query"  # Use for queries
+            )
+            # Access the embedding from the response dictionary
+            return response['embedding']
+        except Exception as e:
+            print(f"[RAG SERVICE] Error generating embedding: {e}")
+            raise
+    
+    def _search_relevant_chunks(self, query_embedding: List[float]) -> List[SearchResult]:
+        """
+        Search for relevant chunks in Qdrant using the query embedding.
+        
+        Args:
+            query_embedding: Embedding vector for the query
             
-            # Try new API first (qdrant-client >= 1.7.0)
-            try:
-                print("DEBUG: Attempting query_points (new API)...")
-                search_result = self.qdrant_client.query_points(
-                    collection_name=collection_name,
-                    query=query_embedding,
-                    limit=5
-                ).points
-                print(f"DEBUG: query_points succeeded")
-                
-            except AttributeError:
-                # Fall back to old API (qdrant-client < 1.7.0)
-                print("DEBUG: Falling back to search (old API)...")
-                search_result = self.qdrant_client.search(
-                    collection_name=collection_name,
-                    query_vector=query_embedding,
-                    limit=5
-                )
-                print(f"DEBUG: search succeeded")
-            
-            print(f"DEBUG: Qdrant found {len(search_result)} results")
+        Returns:
+            List of SearchResult objects
+        """
+        try:
+            response = self.qdrant_client.query_points(
+                collection_name=self.collection_name,
+                query=query_embedding,
+                limit=self.top_k,
+                with_payload=True
+            )
             
             results = []
-            for point in search_result:
-                # Handle both old and new response formats
-                payload = getattr(point, 'payload', None)
-                if payload:
-                    result = SearchResult(
-                        text=payload.get("text", ""),
-                        source_id=payload.get("source", ""),
-                        title=payload.get("header", "")
-                    )
-                    results.append(result)
-                    print(f"DEBUG: Added result from '{result.title}'")
+            for point in response.points:
+                if point.payload:
+                    results.append(SearchResult(
+                        text=point.payload.get("content", ""),
+                        source_id=point.payload.get("filepath", "Unknown"),
+                        title=point.payload.get("heading", "Unknown Section")
+                    ))
             
             return results
-            
         except Exception as e:
-            print(f"ERROR in retrieve_context: {type(e).__name__}: {str(e)}")
-            import traceback
-            traceback.print_exc()
+            print(f"[RAG SERVICE] Error searching Qdrant: {e}")
             raise
+    
+    def _generate_answer(self, query: str, search_results: List[SearchResult]) -> str:
+        """
+        Generate an answer using OpenAI based on the query and retrieved context.
+        
+        Args:
+            query: User's question
+            search_results: List of relevant chunks from the textbook
+            
+        Returns:
+            Generated answer as a string
+        """
+        # Build context from search results
+        context_parts = []
+        for i, result in enumerate(search_results, 1):
+            context_parts.append(f"[Source {i} - {result.title}]\n{result.text}\n")
+        
+        context = "\n".join(context_parts)
+        
+        # Create the prompt
+        system_prompt = """You are a helpful AI assistant that answers questions about Physical AI and Humanoid Robotics based on a textbook.
 
-    async def generate_answer(self, context: str, user_query: str) -> str:
-        """Generates an answer using the OpenAI Chat Completions API based on the provided context."""
+Your task is to:
+1. Answer the user's question using ONLY the information provided in the context below
+2. Be accurate and concise
+3. If the context doesn't contain enough information to answer the question, say "I cannot find that in the textbook."
+4. Cite which source(s) you used in your answer by mentioning the source numbers
+
+Context from the textbook:
+"""
+        
+        user_prompt = f"""{system_prompt}
+
+{context}
+
+User Question: {query}
+
+Answer:"""
+        
         try:
-            print("DEBUG: Calling OpenAI Chat Completions")
-            print(f"DEBUG: Context length: {len(context)} characters")
-            
-            prompt = f"Context from textbook:\n{context}\n\nUser Question: {user_query}"
-            
-            response = await self.openai_client.chat.completions.create(
+            response = self.openai_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": prompt}
+                    {"role": "system", "content": "You are a helpful AI assistant for a Physical AI and Humanoid Robotics textbook."},
+                    {"role": "user", "content": user_prompt}
                 ],
-                temperature=0.3,
-                max_tokens=1000
+                temperature=0.7,
+                max_tokens=500
             )
             
-            answer = response.choices[0].message.content
-            print(f"DEBUG: Generated answer length: {len(answer)} characters")
-            return answer
-            
+            return response.choices[0].message.content.strip()
         except Exception as e:
-            print(f"ERROR in generate_answer: {type(e).__name__}: {str(e)}")
+            print(f"[RAG SERVICE] Error generating answer with OpenAI: {e}")
             raise
-
-    async def process_query(self, request: RagRequest) -> RagResponse:
-        """Orchestrates the RAG pipeline."""
-        try:
-            print(f"\n{'='*60}")
-            print(f"DEBUG: Starting process_query for: '{request.message}'")
-            print(f"{'='*60}\n")
+    
+    def _extract_sources(self, search_results: List[SearchResult]) -> List[str]:
+        """
+        Extract unique source references from search results in a user-friendly format.
+        
+        Args:
+            search_results: List of SearchResult objects
             
-            # Step 1: Generate embedding
-            print("STEP 1: Generating embedding...")
-            query_embedding = await self.embed_query(request.message)
-            print(f"✓ Embedding generated successfully\n")
+        Returns:
+            List of unique, user-friendly source strings
+        """
+        sources = []
+        seen = set()
+        
+        for result in search_results:
+            # Use only the section title, not the file path
+            # The title already contains the meaningful section name
+            source_ref = result.title
             
-            # Step 2: Retrieve context
-            print("STEP 2: Retrieving context from Qdrant...")
-            context_chunks = await self.retrieve_context(query_embedding)
-            print(f"✓ Retrieved {len(context_chunks)} context chunks\n")
-
-            if not context_chunks:
-                print("WARNING: No context chunks found")
-                return RagResponse(
-                    answer="I cannot find that in the textbook.",
-                    sources=[]
-                )
-
-            # Step 3: Prepare context for LLM
-            print("STEP 3: Preparing context...")
-            context_text = "\n\n".join([
-                f"Source: {c.title} ({c.source_id})\n{c.text}" 
-                for c in context_chunks
-            ])
-            
-            sources = sorted(list(set([
-                f"{c.title} ({c.source_id})" 
-                for c in context_chunks
-            ])))
-            print(f"✓ Prepared context from {len(sources)} unique sources\n")
-
-            # Step 4: Generate answer
-            print("STEP 4: Generating answer with OpenAI...")
-            answer = await self.generate_answer(context_text, request.message)
-            print(f"✓ Answer generated successfully\n")
-
-            print(f"{'='*60}")
-            print("DEBUG: Process completed successfully")
-            print(f"{'='*60}\n")
-
-            return RagResponse(answer=answer, sources=sources)
-            
-        except Exception as e:
-            print(f"\n{'='*60}")
-            print(f"ERROR in process_query: {type(e).__name__}")
-            print(f"Error message: {str(e)}")
-            print(f"{'='*60}\n")
-            raise
+            if source_ref not in seen and source_ref != "Unknown Section":
+                sources.append(source_ref)
+                seen.add(source_ref)
+        
+        return sources
