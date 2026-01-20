@@ -93,11 +93,23 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Learn',
           items: [
             {
-              label: 'Course Intro',
-              to: '/docs/intro',
+              label: 'Get Started',
+              to: '/docs/preface',
+            },
+            {
+              label: 'Chapter 1',
+              to: '/docs/chapter-1',
+            },
+            {
+              label: 'Chapter 2',
+              to: '/docs/chapter-2',
+            },
+            {
+              label: 'Chapter 3',
+              to: '/docs/chapter-3',
             },
           ],
         },
@@ -108,10 +120,27 @@ const config: Config = {
               label: 'GitHub',
               href: 'https://github.com/codeWithHak/physical-ai-and-humanoid-robotics-textbook',
             },
+            {
+              label: 'Twitter',
+              href: 'https://twitter.com/codeWithHak',
+            },
+            {
+              label: 'LinkedIn',
+              href: 'https://linkedin.com/in/codeWithHak',
+            },
+          ],
+        },
+        {
+          title: 'Contact',
+          items: [
+            {
+              label: 'Email',
+              href: 'mailto:contact@physical-ai-robotics.dev',
+            },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} codeWithHak. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics Textbook. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

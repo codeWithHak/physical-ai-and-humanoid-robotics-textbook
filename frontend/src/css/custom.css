@@ -56,3 +56,71 @@ h2 {
 .navbar__link--active {
   color: var(--ifm-color-primary);
 }
+
+/* Landing Page Section Styles */
+[data-theme='dark'] {
+  --landing-section-padding: 6rem 2rem;
+  --landing-container-max-width: 1200px;
+  --landing-section-bg-alt: #050505;
+  --landing-card-bg: #0a0a0a;
+  --landing-card-border: rgba(191, 230, 0, 0.1);
+  --landing-text-muted: #a0a0a0;
+}
+
+.landing-section {
+  padding: var(--landing-section-padding);
+  width: 100%;
+}
+
+.landing-section--alt {
+  background-color: var(--landing-section-bg-alt);
+}
+
+.landing-container {
+  max-width: var(--landing-container-max-width);
+  margin: 0 auto;
+}
+
+.landing-headline {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.landing-subheadline {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.landing-supporting-text {
+  font-size: 1.25rem;
+  color: var(--landing-text-muted);
+  margin-bottom: 3rem;
+  max-width: 700px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 996px) {
+  [data-theme='dark'] {
+    --landing-section-padding: 4rem 1.5rem;
+  }
+
+  .landing-headline {
+    font-size: 2.25rem;
+  }
+
+  .landing-subheadline {
+    font-size: 1.375rem;
+  }
+
+  .landing-supporting-text {
+    font-size: 1.125rem;
+  }
+}

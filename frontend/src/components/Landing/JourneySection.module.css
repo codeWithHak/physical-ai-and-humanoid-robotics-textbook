@@ -1,0 +1,98 @@
+.journey {
+  background-color: var(--ifm-background-color);
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.card {
+  background-color: var(--landing-card-bg);
+  border: 1px solid var(--landing-card-border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.card:hover {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(191, 230, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(191, 230, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  color: var(--ifm-color-primary);
+}
+
+.chapterNumber {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--landing-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 0.75rem 0;
+}
+
+.cardDescription {
+  font-size: 0.9375rem;
+  color: var(--landing-text-muted);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.cardArrow {
+  font-size: 1.25rem;
+  color: var(--ifm-color-primary);
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.card:hover .cardArrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Responsive - Mobile */
+@media screen and (max-width: 996px) {
+  .cardsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .cardTitle {
+    font-size: 1.125rem;
+  }
+}
