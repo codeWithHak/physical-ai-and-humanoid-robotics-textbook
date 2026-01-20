@@ -5,6 +5,11 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
 
+import { JourneySection } from '../components/Landing/JourneySection';
+import { WhySection } from '../components/Landing/WhySection';
+import { HardwareTiers } from '../components/Landing/HardwareTiers';
+import { CtaSection } from '../components/Landing/CtaSection';
+
 import styles from './index.module.css';
 
 function HomepageHeader() {
@@ -55,7 +60,10 @@ export default function Home(): ReactNode {
       description="The open-source textbook for Physical AI and Humanoid Robotics.">
       <HomepageHeader />
       <main>
-        {/* Main content area - currently empty per "Clean Slate" requirement */}
+        <JourneySection />
+        <WhySection />
+        <HardwareTiers />
+        <CtaSection />
       </main>
     </Layout>
   );

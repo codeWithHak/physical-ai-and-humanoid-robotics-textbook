@@ -1,0 +1,143 @@
+.cta {
+  text-align: center;
+  padding-bottom: 4rem;
+}
+
+.ctaContent {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ctaHeadline {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin: 0 0 0.5rem 0;
+}
+
+.ctaSubheadline {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.ctaTagline {
+  font-size: 1.25rem;
+  color: #FFFFFF;
+  margin: 0 0 1rem 0;
+}
+
+.ctaSupportingText {
+  font-size: 1.125rem;
+  color: var(--landing-text-muted);
+  line-height: 1.7;
+  margin: 0 0 3rem 0;
+}
+
+.ctaBox {
+  background-color: var(--landing-card-bg);
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 16px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 0 60px rgba(191, 230, 0, 0.1);
+}
+
+.ctaBoxIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(191, 230, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ifm-color-primary);
+}
+
+.ctaBoxContent {
+  text-align: center;
+}
+
+.ctaBoxTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 0.5rem 0;
+}
+
+.ctaBoxSubtext {
+  font-size: 1rem;
+  color: var(--landing-text-muted);
+  margin: 0;
+}
+
+.ctaButton {
+  display: inline-block;
+  background-color: var(--ifm-color-primary);
+  color: #000000;
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.ctaButton:hover {
+  background-color: var(--ifm-color-primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(191, 230, 0, 0.3);
+  color: #000000;
+  text-decoration: none;
+}
+
+/* Responsive - Mobile */
+@media screen and (max-width: 996px) {
+  .ctaHeadline {
+    font-size: 2rem;
+  }
+
+  .ctaSubheadline {
+    font-size: 1.25rem;
+  }
+
+  .ctaTagline {
+    font-size: 1rem;
+  }
+
+  .ctaSupportingText {
+    font-size: 1rem;
+  }
+
+  .ctaBox {
+    padding: 2rem 1.5rem;
+  }
+
+  .ctaBoxIcon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .ctaBoxIcon svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ctaBoxTitle {
+    font-size: 1.25rem;
+  }
+
+  .ctaButton {
+    font-size: 1rem;
+    padding: 0.875rem 2rem;
+    width: 100%;
+    text-align: center;
+  }
+}
