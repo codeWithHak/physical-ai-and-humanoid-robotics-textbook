@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: Physical AI Textbook Chat API
+  description: Agentic RAG chatbot for the Physical AI and Humanoid Robotics textbook
+  version: 2.0.0
+  contact:
+    name: Physical AI Textbook Team
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://physical-ai-book-backend.vercel.app
+    description: Production server
+
+paths:
+  /api/chat:
+    post:
+      summary: Send a message to the textbook tutor
+      description: |
+        Processes a student question using the agentic RAG system.
+        The tutor agent searches the textbook, retrieves relevant content,
+        and generates an educational response with source citations.
+      operationId: chat
+      tags:
+        - Chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RagRequest'
+            examples:
+              conceptQuestion:
+                summary: Concept question
+                value:
+                  message: "What is the Triad Architecture?"
+              broadQuestion:
+                summary: Broad question
+                value:
+                  message: "Tell me about embodied AI"
+      responses:
+        '200':
+          description: Successful response with answer and sources
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RagResponse'
+              examples:
+                success:
+                  summary: Successful answer
+                  value:
+                    answer: "The Triad Architecture is a framework that structures robotics solutions into three components: Human Intent (voice or prompt input), AI Planner (LLM or VLA that interprets and plans), and Robotic Execution (ROS 2 nodes and actuators that carry out the plan). This architecture ensures clear separation between human goals, AI reasoning, and physical action."
+                    sources:
+                      - "The Triad Architecture"
+                      - "Human Intent Layer"
+        '400':
+          description: Invalid request (empty or oversized message)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Invalid request: message must be between 1 and 1000 characters"
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Rate limit exceeded. Please wait before sending more requests."
+        '503':
+          description: Upstream service unavailable (OpenAI or Qdrant)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "OpenAI API error: Service temporarily unavailable"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/health:
+    get:
+      summary: Health check endpoint
+      description: Returns service status and configuration info
+      operationId: healthCheck
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "healthy"
+                service: "Agent Service (OpenAI)"
+                checks:
+                  openai: "configured"
+                  qdrant_url: "configured"
+                  qdrant_api_key: "configured"
+
+components:
+  schemas:
+    RagRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: The student's question or message
+          minLength: 1
+          maxLength: 1000
+          example: "What is the Triad Architecture?"
+
+    RagResponse:
+      type: object
+      required:
+        - answer
+        - sources
+      properties:
+        answer:
+          type: string
+          description: The tutor's educational response
+          example: "The Triad Architecture structures robotics solutions..."
+        sources:
+          type: array
+          items:
+            type: string
+          description: List of textbook sections cited in the response
+          example:
+            - "The Triad Architecture"
+            - "Human Intent Layer"
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: Human-readable error message
+          example: "Invalid request: message cannot be empty"
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+          description: Overall service health status
+        service:
+          type: string
+          description: Service identifier
+        checks:
+          type: object
+          additionalProperties:
+            type: string
+          description: Individual component health checks
+        error:
+          type: string
+          description: Error message if unhealthy
+
+tags:
+  - name: Chat
+    description: Textbook chatbot endpoints
+  - name: Health
+    description: Service health monitoring
