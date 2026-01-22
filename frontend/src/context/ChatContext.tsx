@@ -17,6 +17,7 @@ const ChatContext = createContext<ChatContextProps | undefined>(undefined);
 
 // Always use the deployed backend
 const API_URL = 'https://physicalaibookbackend.vercel.app/api/chat';
+// const API_URL = 'http://localhost:8000/api/chat';
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);

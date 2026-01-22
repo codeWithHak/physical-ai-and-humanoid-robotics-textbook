@@ -1,4 +1,4 @@
-# Gemini CLI Rules
+# CLAUDE CODE Rules
 
 This file is generated during init for the selected agent.
 
@@ -225,6 +225,10 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 - Qdrant Cloud (Vector DB) (011-rag-ingestion)
 - Python 3.12 + `fastapi`, `uvicorn`, `mangum`, `pydantic`, `python-dotenv` (012-backend-server-foundation)
 - Qdrant Cloud (Vector Data), In-memory (Processing) (013-rag-backend)
+- TypeScript 5.6 / React 19.0 + Docusaurus 3.9.2, Infima CSS, lucide-react (icons), clsx (014-landing-page-redesign)
+- N/A (static content, chapter data from docs/ structure) (014-landing-page-redesign)
+- Python 3.12 + FastAPI 0.124+, OpenAI Agents SDK (openai-agents 0.6+), Qdrant Client 1.16+, rank-bm25 (for sparse retrieval) (015-agentic-rag-system)
+- Qdrant Cloud (vector DB with `physical_ai_textbook_v2` collection) (015-agentic-rag-system)
 
 ## Recent Changes
 - 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)
