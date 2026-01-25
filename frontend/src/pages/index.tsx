@@ -31,7 +31,7 @@ function HomepageHeader() {
             </Link>
             <Link
               className={styles.secondaryBtn}
-              to="https://github.com/codeWithHak/physical-ai-and-humanoid-robotics-textbook">
+              to="https://github.com/codeWithHak/physai">
               GITHUB
             </Link>
           </div>

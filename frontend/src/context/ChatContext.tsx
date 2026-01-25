@@ -16,7 +16,7 @@ interface ChatContextProps {
 const ChatContext = createContext<ChatContextProps | undefined>(undefined);
 
 // Hugging Face Spaces backend
-const API_URL = 'https://hak-16-physical-ai-backend.hf.space/api/chat';
+const API_URL = 'https://hak-16-physai-backend.hf.space/api/chat';
 // const API_URL = 'http://localhost:8000/api/chat';
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

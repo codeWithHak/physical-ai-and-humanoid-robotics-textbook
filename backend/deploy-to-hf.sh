@@ -4,7 +4,7 @@
 
 set -e
 
-HF_DEPLOY_DIR="/home/hak/projects/hf-backend-deploy"
+HF_DEPLOY_DIR="/home/hak/projects/hf-physai-backend"
 BACKEND_DIR="$(dirname "$0")"
 COMMIT_MSG="${1:-Update backend}"
 
@@ -33,4 +33,4 @@ git commit -m "$COMMIT_MSG" || echo "No changes to commit"
 git push origin main
 
 echo "✅ Deployed to HF Spaces!"
-echo "🔗 https://huggingface.co/spaces/HAK-16/physical-ai-backend"
+echo "🔗 https://huggingface.co/spaces/HAK-16/physai-backend"
