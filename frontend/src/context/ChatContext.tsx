@@ -15,8 +15,8 @@ interface ChatContextProps {
 
 const ChatContext = createContext<ChatContextProps | undefined>(undefined);
 
-// Always use the deployed backend
-const API_URL = 'https://physicalaibookbackend.vercel.app/api/chat';
+// Hugging Face Spaces backend
+const API_URL = 'https://hak-16-physical-ai-backend.hf.space/api/chat';
 // const API_URL = 'http://localhost:8000/api/chat';
 
 export const ChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
