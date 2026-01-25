@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://physical-ai-and-humanoid-robotics-h.vercel.app/',
+  url: 'https://physai.vercel.app/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -23,7 +23,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'codeWithHak', // Usually your GitHub org/user name.
-  projectName: 'physical-ai-and-humanoid-robotics-textbook', // Usually your repo name.
+  projectName: 'physai', // Usually your repo name.
 
   onBrokenLinks: 'warn',
 
@@ -48,7 +48,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/codeWithHak/physical-ai-and-humanoid-robotics-textbook/tree/main/frontend/',
+            'https://github.com/codeWithHak/physai/tree/main/frontend/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -83,7 +83,7 @@ const config: Config = {
           label: 'Course',
         },
         {
-          href: 'https://github.com/codeWithHak/physical-ai-and-humanoid-robotics-textbook',
+          href: 'https://github.com/codeWithHak/physai',
           label: 'GitHub',
           position: 'right',
         },
@@ -118,7 +118,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/codeWithHak/physical-ai-and-humanoid-robotics-textbook',
+              href: 'https://github.com/codeWithHak/physai',
             },
             {
               label: 'Twitter',
@@ -135,7 +135,7 @@ const config: Config = {
           items: [
             {
               label: 'Email',
-              href: 'mailto:contact@physical-ai-robotics.dev',
+              href: 'mailto:contact@physai.dev',
             },
           ],
         },
