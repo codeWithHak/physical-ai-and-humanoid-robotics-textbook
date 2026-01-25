@@ -1,9 +1,10 @@
 ---
-title: "Senses of the Machine"
+title: "1.4 Senses of the Machine"
 sidebar_position: 4
 ---
 
 import TermTooltip from '@site/src/components/TermTooltip';
+import Admonition from '@theme/Admonition';
 
 # 1.4 Senses of the Machine
 
@@ -27,10 +28,27 @@ Unlike a standard webcam that passively collects light, the RealSense D435i is a
 2.  **Stereo Imaging**: Two IR cameras, spaced a known distance apart (the "stereo baseline"), capture images of the dot pattern.
 3.  **Triangulation**: Because the two cameras see the pattern from slightly different angles, the dots appear shifted in each image. This difference is called **disparity**. The onboard Vision Processor (in the camera itself) calculates this disparity for every dot. Using simple trigonometry, it can then compute the precise distance from the camera to that point.
 
-<div style={{textAlign: 'center'}}>
-  <img src="https://www.intelrealsense.com/wp-content/uploads/2021/08/stereo-depth-diagram.png" alt="Intel RealSense Active Stereo Triangulation" width="70%" />
-  <p><small><i>Source: Intel RealSense. The disparity between the left and right IR images allows for depth calculation.</i></small></p>
-</div>
+```mermaid
+graph LR
+    subgraph Camera["RealSense D435i"]
+        IR[IR Projector]
+        L[Left IR Sensor]
+        R[Right IR Sensor]
+    end
+
+    IR -->|Projects dot pattern| Scene[Scene/Object]
+    Scene -->|Reflected pattern| L
+    Scene -->|Reflected pattern| R
+    L -->|Image A| VP[Vision Processor]
+    R -->|Image B| VP
+    VP -->|Disparity Calculation| Depth[Depth Map]
+
+    style Depth fill:#BFE600,stroke:#000,color:#000
+```
+
+<Admonition type="tip" title="How Stereo Depth Works">
+The two IR cameras see the projected dot pattern from slightly different angles. This creates a **disparity** — dots appear shifted between left and right images. Greater shift = closer object. The vision processor uses triangulation to compute precise distances.
+</Admonition>
 
 The result is a "depth image," where each pixel's value corresponds to its distance from the camera, accurate to a few millimeters. When combined with the standard color image, this gives the AI a complete 3D understanding of the scene in front of it, enabling it to differentiate between a photograph of a cup and a real, graspable cup.
 

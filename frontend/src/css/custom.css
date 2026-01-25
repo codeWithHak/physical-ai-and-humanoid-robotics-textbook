@@ -57,6 +57,14 @@ h2 {
   color: var(--ifm-color-primary);
 }
 
+/* TODO: Remove when light mode is implemented */
+.navbar__items--right .colorModeToggle_DEke,
+.navbar__items--right [class*="colorModeToggle"] {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 /* Landing Page Section Styles */
 [data-theme='dark'] {
   --landing-section-padding: 6rem 2rem;

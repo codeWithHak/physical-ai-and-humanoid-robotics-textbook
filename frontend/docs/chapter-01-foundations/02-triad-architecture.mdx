@@ -1,10 +1,9 @@
 ---
-title: "The Triad Architecture"
+title: "1.2 The Triad Architecture"
 sidebar_position: 2
 ---
 
 import TermTooltip from '@site/src/components/TermTooltip';
-import { Mermaid } from 'mdx-mermaid/Mermaid';
 
 # 1.2 The Triad Architecture
 
@@ -14,8 +13,7 @@ The Triad is not just a technical diagram; it is a strategic blueprint for desig
 
 This "Partnership of People + AI + Robots" is fundamental to creating systems that are both highly autonomous and safely aligned with human intent.
 
-<Mermaid>
-  {`
+```mermaid
 graph LR
     subgraph The Human Commander
         H[Human Operator]
@@ -27,16 +25,15 @@ graph LR
         R[Robot Hardware]
     end
 
-    H -->|High-Level Goal: "Clean the garage"| A
-    A -->|Low-Level Commands: ["grasp(allen_key)", "move_to(drawer)"]| R
+    H -->|High-Level Goal| A
+    A -->|Low-Level Commands| R
     R -->|Real-Time Sensor Data| A
-    A -->|Progress & Anomalies| H
+    A -->|Progress and Anomalies| H
 
     style H fill:#BFE600,stroke:#000,color:#000
     style A fill:#222,stroke:#BFE600,color:#fff
     style R fill:#444,stroke:#fff,color:#fff
-`}
-</Mermaid>
+```
 
 In this course, we will construct each layer of this triad, exploring both the theoretical principles and the practical engineering skills required to make them work in concert.
 

@@ -81,28 +81,31 @@ export default function UrdfExplorer() {
             <div className={styles.codeLine}>&lt;/robot&gt;</div>
           </code>
         </pre>
+        <div className={styles.hint}>Hover over highlighted lines to see parts</div>
       </div>
       <div className={styles.visualPanel}>
         <svg viewBox="0 0 200 300" className={styles.robotSvg}>
-          {/* Base Link */}
-          <rect 
-            x="70" y="220" width="60" height="60" 
-            className={`${styles.svgElement} ${highlightedElement === 'base_link' ? styles.activeSvg : ''}`}
-          />
-          <text x="100" y="255" textAnchor="middle" className={styles.label}>Base</text>
-
-          {/* Shoulder Joint */}
-          <circle 
-            cx="100" y="220" r="10" 
-            className={`${styles.svgElement} ${highlightedElement === 'shoulder_joint' ? styles.activeSvg : ''}`}
-          />
-          
           {/* Upper Arm */}
-          <rect 
-            x="80" y="120" width="40" height="90" 
+          <rect
+            x="80" y="100" width="40" height="100"
             className={`${styles.svgElement} ${highlightedElement === 'upper_arm' ? styles.activeSvg : ''}`}
           />
-          <text x="100" y="165" textAnchor="middle" className={styles.label}>Upper Arm</text>
+          <text x="100" y="155" textAnchor="middle" className={styles.label}>Upper Arm</text>
+
+          {/* Shoulder Joint */}
+          <circle
+            cx="100" cy="205" r="12"
+            className={`${styles.svgElement} ${highlightedElement === 'shoulder_joint' ? styles.activeSvg : ''}`}
+          />
+          <text x="140" y="210" className={styles.label}>Joint</text>
+
+          {/* Base Link */}
+          <rect
+            x="60" y="220" width="80" height="50"
+            rx="4"
+            className={`${styles.svgElement} ${highlightedElement === 'base_link' ? styles.activeSvg : ''}`}
+          />
+          <text x="100" y="250" textAnchor="middle" className={styles.label}>Base</text>
         </svg>
       </div>
     </div>
