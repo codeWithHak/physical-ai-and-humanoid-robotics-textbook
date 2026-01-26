@@ -13,26 +13,30 @@ import { CtaSection } from '../components/Landing/CtaSection';
 import styles from './index.module.css';
 
 function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
   return (
     <header className={styles.heroBanner}>
       <div className={styles.heroContainer}>
         {/* Left Column: Text */}
         <div className={styles.heroText}>
           <Heading as="h1" className={styles.heroTitle}>
-            {siteConfig.title}
+            Learn to Build{' '}
+            <span className={styles.highlight}>Intelligent Humanoid Robots</span>
           </Heading>
-          <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
+          <p className={styles.heroDescription}>
+            PhysAI is the open-source textbook for Physical AI and Humanoid Robotics.
+            Master the complete stack—from ROS 2 and simulation to vision-language models
+            and real-world deployment.
+          </p>
           <div className={styles.buttons}>
             <Link
               className={styles.primaryBtn}
               to="/docs/preface">
-              GET STARTED
+              START LEARNING
             </Link>
             <Link
               className={styles.secondaryBtn}
               to="https://github.com/codeWithHak/physai">
-              GITHUB
+              VIEW ON GITHUB
             </Link>
           </div>
         </div>

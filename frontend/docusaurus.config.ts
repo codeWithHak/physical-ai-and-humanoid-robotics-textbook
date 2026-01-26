@@ -5,14 +5,20 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Physical AI & Humanoid Robotics Textbook',
-  tagline: 'Mastering the Partnership of People + AI + Robots',
+  title: 'PhysAI',
+  tagline: 'The open-source textbook for Physical AI and Humanoid Robotics',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
+
+  // Enable Mermaid diagrams in Markdown
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
 
   // Set the production url of your site here
   url: 'https://physai.vercel.app/',
@@ -66,11 +72,11 @@ const config: Config = {
     image: 'img/docusaurus-social-card.jpg',
     colorMode: {
       defaultMode: 'dark',
-      disableSwitch: false,
+      disableSwitch: false, // Button visible but disabled via CSS until light mode is implemented
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'Physical AI & Robotics',
+      title: 'PhysAI',
       logo: {
         alt: 'Site Logo',
         src: 'img/logo.svg',

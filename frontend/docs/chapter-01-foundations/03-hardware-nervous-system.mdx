@@ -1,11 +1,10 @@
 ---
-title: "The Hardware Nervous System"
+title: "1.3 The Hardware Nervous System"
 sidebar_position: 3
 ---
 
 import HardwareCheck from '@site/src/components/HardwareCheck';
 import TermTooltip from '@site/src/components/TermTooltip';
-import { Mermaid } from 'mdx-mermaid/Mermaid';
 
 # 1.3 The Hardware Nervous System
 
@@ -32,10 +31,9 @@ The Workstation is where the heavy lifting happens. Training a <TermTooltip term
 -   **Minimum GPU**: NVIDIA GeForce RTX 4070 Ti (12 GB)
 -   **Recommended GPU**: NVIDIA GeForce RTX 4090 (24 GB)
 
-<Mermaid>
-  {`
+```mermaid
 graph TD
-    subgraph "Digital Twin Workstation (PC)"
+    subgraph Workstation["Digital Twin Workstation"]
         direction LR
         CPU[CPU]
         RAM[64GB+ RAM]
@@ -43,19 +41,18 @@ graph TD
         SSD[NVMe SSD]
     end
 
-    subgraph "Physical Robot"
+    subgraph Robot["Physical Robot"]
         direction LR
-        Edge[Edge Brain<br/>(Jetson Orin)]
+        Edge["Edge Brain (Jetson Orin)"]
         Sensors[Sensors]
         Motors[Motors]
     end
 
-    Workstation -- "Model Training & Simulation" --> Sim[Isaac Sim]
-    Sim -- "Sim-to-Real Deployment" --> Edge
+    Workstation -->|Model Training| Sim[Isaac Sim]
+    Sim -->|Sim-to-Real Deployment| Edge
 
     style Sim fill:#222,stroke:#BFE600,color:#fff
-`}
-</Mermaid>
+```
 
 ### The VRAM Bottleneck Explained
 

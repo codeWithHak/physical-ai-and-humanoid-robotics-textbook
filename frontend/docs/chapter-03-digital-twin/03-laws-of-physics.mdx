@@ -3,7 +3,6 @@ title: "3.3 The Laws of Physics (Gazebo)"
 sidebar_position: 3
 ---
 
-import { Mermaid } from 'mdx-mermaid/Mermaid';
 
 # 3.3 The Laws of Physics (Gazebo)
 
@@ -25,15 +24,13 @@ Solving this massive system of equations for a complex robot with dozens of join
 
 A simulator runs in a discrete loop. It doesn't calculate continuous time; it steps forward in small increments (dt), typically 1 millisecond (1000 Hz). In every step, the following happens:
 
-<Mermaid>
-  {`
-    graph TD
-    A[Physics Step] -->|Calculate Forces & Positions| B[Sensor Update]
-    B -->|Generate Camera/Lidar Data| C[Controller Update]
+```mermaid
+graph TD
+    A[Physics Step] -->|Calculate Forces| B[Sensor Update]
+    B -->|Generate Sensor Data| C[Controller Update]
     C -->|Apply Motor Torques| A
     style A fill:#f9f,stroke:#333,stroke-width:2px
-  `}
-</Mermaid>
+```
 
 1.  **Physics Step (The Solver)**: The physics engine takes the current state of the world and the forces applied (gravity, motor torques) and solves the constraint equations to determine the state of the world at time *t + dt*. This involves collision detection (finding who is touching whom) and constraint resolution (resolving forces). **This is entirely CPU-intensive.**
 2.  **Sensor Update**: Once the objects have moved, the simulator renders the scene. It generates images for simulated cameras, point clouds for LIDARs, and data for IMUs. **This is largely GPU-intensive**, especially for high-fidelity rendering.
