@@ -45,6 +45,18 @@ const config: Config = {
     require.resolve('./src/clientModule.js'),
   ],
 
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preload',
+        href: '/img/hero-robot.webp',
+        as: 'image',
+        type: 'image/webp',
+      },
+    },
+  ],
+
   presets: [
     [
       'classic',

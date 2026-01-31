@@ -44,9 +44,9 @@ function HomepageHeader() {
         {/* Right Column: Visual */}
         <div className={styles.heroVisual}>
           <div className={styles.glowContainer}>
-            <img 
-              src="img/undraw_docusaurus_mountain.svg" 
-              alt="RoboLearn Schematic" 
+            <img
+              src="img/hero-banner.webp"
+              alt="RoboLearn Schematic"
               className={styles.diagramImage}
             />
           </div>

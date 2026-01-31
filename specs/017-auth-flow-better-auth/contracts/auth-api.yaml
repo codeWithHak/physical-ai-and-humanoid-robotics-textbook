@@ -1,0 +1,421 @@
+openapi: 3.1.0
+info:
+  title: PhysAI Auth API
+  description: Authentication endpoints for PhysAI textbook platform using Better-Auth
+  version: 1.0.0
+
+servers:
+  - url: https://hak-16-physai-backend.hf.space
+    description: Production (HuggingFace Spaces)
+  - url: http://localhost:8000
+    description: Local development
+
+paths:
+  /api/auth/signin/{provider}:
+    get:
+      summary: Initiate OAuth sign-in
+      description: Redirects user to OAuth provider for authentication
+      operationId: signIn
+      tags:
+        - Authentication
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [github, google]
+          description: OAuth provider to use
+        - name: callbackURL
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uri
+          description: URL to redirect after auth (default: origin)
+      responses:
+        '302':
+          description: Redirect to OAuth provider
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          description: Invalid provider
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/callback/{provider}:
+    get:
+      summary: OAuth callback handler
+      description: Handles OAuth provider callback, creates session
+      operationId: oauthCallback
+      tags:
+        - Authentication
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [github, google]
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: OAuth authorization code
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+          description: PKCE state parameter
+      responses:
+        '302':
+          description: Redirect to app (with session cookie set)
+          headers:
+            Location:
+              schema:
+                type: string
+            Set-Cookie:
+              schema:
+                type: string
+        '400':
+          description: OAuth error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/session:
+    get:
+      summary: Get current session
+      description: Returns current user session if authenticated
+      operationId: getSession
+      tags:
+        - Session
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Authenticated session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/signout:
+    post:
+      summary: Sign out
+      description: Invalidates current session and clears cookie
+      operationId: signOut
+      tags:
+        - Authentication
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Successfully signed out
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: Clears session cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/token:
+    get:
+      summary: Get JWT token
+      description: Returns a signed JWT for use with external services
+      operationId: getToken
+      tags:
+        - Session
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Signed JWT
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/jwks:
+    get:
+      summary: JWKS endpoint
+      description: Returns public keys for JWT verification
+      operationId: getJwks
+      tags:
+        - Session
+      responses:
+        '200':
+          description: JWKS key set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWKS'
+
+  /api/user/profile:
+    get:
+      summary: Get user profile
+      description: Returns current user's profile including survey responses
+      operationId: getProfile
+      tags:
+        - Profile
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Submit/update survey
+      description: Submits onboarding survey responses
+      operationId: submitSurvey
+      tags:
+        - Profile
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurveySubmission'
+      responses:
+        '200':
+          description: Survey saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: better-auth.session_token
+      description: Session token cookie (httpOnly, secure)
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: unauthorized
+        message:
+          type: string
+          example: Authentication required
+
+    SessionResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        session:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            expiresAt:
+              type: string
+              format: date-time
+        profile:
+          $ref: '#/components/schemas/UserProfile'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        image:
+          type: string
+          format: uri
+          description: Avatar URL
+        emailVerified:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [student, researcher, hobbyist, professional]
+        softwareBackground:
+          type: array
+          items:
+            type: string
+            enum:
+              - python_beginner
+              - python_intermediate
+              - python_advanced
+              - ros_familiar
+              - ros_experienced
+              - ml_familiar
+              - ml_experienced
+              - linux_comfortable
+              - linux_expert
+        hardwareAccess:
+          type: array
+          items:
+            type: string
+            enum:
+              - nvidia_jetson
+              - gpu_workstation
+              - cloud_gpu
+              - simulation_only
+        learningGoal:
+          type: string
+          enum:
+            - build_humanoid
+            - understand_embodied_ai
+            - career_transition
+            - academic_research
+        surveyCompleted:
+          type: boolean
+        surveyCompletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    SurveySubmission:
+      type: object
+      required:
+        - role
+        - softwareBackground
+        - hardwareAccess
+        - learningGoal
+      properties:
+        role:
+          type: string
+          enum: [student, researcher, hobbyist, professional]
+        softwareBackground:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: At least one software skill required
+        hardwareAccess:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: At least one hardware option required
+        learningGoal:
+          type: string
+          enum:
+            - build_humanoid
+            - understand_embodied_ai
+            - career_transition
+            - academic_research
+
+    JWKS:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kty:
+                type: string
+                example: RSA
+              kid:
+                type: string
+              use:
+                type: string
+                example: sig
+              alg:
+                type: string
+                example: RS256
+              n:
+                type: string
+              e:
+                type: string
+
+tags:
+  - name: Authentication
+    description: OAuth sign-in/sign-out flows
+  - name: Session
+    description: Session management and JWT tokens
+  - name: Profile
+    description: User profile and survey management
