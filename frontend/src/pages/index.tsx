@@ -44,20 +44,11 @@ function HomepageHeader() {
         {/* Right Column: Visual */}
         <div className={styles.heroVisual}>
           <div className={styles.glowContainer}>
-            <picture>
-              <source
-                srcSet="img/hero-banner.webp"
-                type="image/webp"
-              />
-              <img
-                src="img/hero-banner.png"
-                alt="PhysAI Hero - Intelligent Humanoid Robot"
-                className={styles.diagramImage}
-                width={1600}
-                height={1073}
-                loading="eager"
-              />
-            </picture>
+            <img
+              src="img/hero-banner.webp"
+              alt="RoboLearn Schematic"
+              className={styles.diagramImage}
+            />
           </div>
         </div>
       </div>
