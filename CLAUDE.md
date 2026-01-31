@@ -229,6 +229,8 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 - N/A (static content, chapter data from docs/ structure) (014-landing-page-redesign)
 - Python 3.12 + FastAPI 0.124+, OpenAI Agents SDK (openai-agents 0.6+), Qdrant Client 1.16+, rank-bm25 (for sparse retrieval) (015-agentic-rag-system)
 - Qdrant Cloud (vector DB with `physical_ai_textbook_v2` collection) (015-agentic-rag-system)
+- TypeScript 5.x (auth service), Python 3.12 (FastAPI), React 18+ (frontend) + Better-Auth, FastAPI, Docusaurus, @better-auth/client (017-auth-flow-better-auth)
+- Neon PostgreSQL (user, session, account, verification, user_profile tables) (017-auth-flow-better-auth)
 
 ## Recent Changes
 - 002-preface-and-user-guide: Added Markdown / MDX (Docusaurus v3+) + Docusaurus v3+ (Standard Admonitions)

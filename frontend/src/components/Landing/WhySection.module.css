@@ -24,8 +24,11 @@
 }
 
 .valuePropIcon {
-  font-size: 3rem;
+  color: var(--ifm-color-primary);
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .valuePropTitle {
@@ -50,8 +53,9 @@
     max-width: 400px;
   }
 
-  .valuePropIcon {
-    font-size: 2.5rem;
+  .valuePropIcon svg {
+    width: 28px;
+    height: 28px;
   }
 
   .valuePropTitle {

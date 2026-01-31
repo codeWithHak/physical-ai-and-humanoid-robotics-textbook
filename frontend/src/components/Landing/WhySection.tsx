@@ -1,4 +1,5 @@
 import React from 'react';
+import { Cpu, Wrench, TrendingUp } from 'lucide-react';
 import styles from './WhySection.module.css';
 
 export function WhySection() {
@@ -14,21 +15,27 @@ export function WhySection() {
         <div className={styles.content}>
           <div className={styles.valueProps}>
             <div className={styles.valueProp}>
-              <div className={styles.valuePropIcon}>🤖</div>
+              <div className={styles.valuePropIcon}>
+                <Cpu size={32} strokeWidth={1.5} />
+              </div>
               <h3 className={styles.valuePropTitle}>Physical Intelligence</h3>
               <p className={styles.valuePropText}>
                 Move beyond chatbots to robots that interact with the real world
               </p>
             </div>
             <div className={styles.valueProp}>
-              <div className={styles.valuePropIcon}>⚡</div>
+              <div className={styles.valuePropIcon}>
+                <Wrench size={32} strokeWidth={1.5} />
+              </div>
               <h3 className={styles.valuePropTitle}>Practical Skills</h3>
               <p className={styles.valuePropText}>
                 Learn ROS 2, simulation, and deployment with hands-on projects
               </p>
             </div>
             <div className={styles.valueProp}>
-              <div className={styles.valuePropIcon}>🚀</div>
+              <div className={styles.valuePropIcon}>
+                <TrendingUp size={32} strokeWidth={1.5} />
+              </div>
               <h3 className={styles.valuePropTitle}>Future-Ready</h3>
               <p className={styles.valuePropText}>
                 Position yourself at the forefront of the robotics revolution
